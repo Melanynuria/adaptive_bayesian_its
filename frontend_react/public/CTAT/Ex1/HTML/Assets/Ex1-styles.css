@@ -1,0 +1,154 @@
+#iyap {
+    padding: 0px 0px 0px 0px;
+    transition: padding 0.5s, ease-in-out;
+}
+
+#iocy {
+    height: 67px;
+}
+
+#iye1q {
+    margin: 0 0px 0px 0px;
+    padding: 0px 0px 0px 15px;
+    color: #616161;
+    display: inline-block;
+}
+
+#ihxd3 {
+    height: 10px;
+}
+
+#eq1-2 {
+    width: 150px;
+    display: inline-block;
+    padding: 5px 5px 5px 10px;
+}
+
+#i2uhh {
+    margin: 0 0px 0px 0px;
+    padding: 0px 0px 0px 15px;
+    color: #616161;
+    display: inline-block;
+}
+
+#ig586 {
+    height: 76px;
+}
+
+#iwprv {
+    margin: 0 0px 0px 0px;
+    padding: 0px 0px 0px 15px;
+    color: #616161;
+    display: inline-block;
+}
+
+#ip3wh {
+    height: 10px;
+}
+
+#i7kyk {
+    display: inline;
+    font-weight: 800;
+    font-size: 40px;
+}
+
+#io1k {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+}
+
+#ikrx {
+    flex-direction: column;
+}
+
+#iswhj {
+    display: inline;
+}
+
+#iz8oi {
+    flex-direction: column;
+}
+
+#i03w9 {
+    margin: 0 0px 0px 0px;
+    padding: 0px 0px 0px 15px;
+    color: #616161;
+    display: inline-block;
+}
+
+#eq1-1 {
+    display: inline-block;
+    width: 150px;
+    padding: 5px 5px 5px 15px;
+}
+
+#igwy7 {
+    height: 67px;
+}
+
+#izpa {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+}
+
+#imsd5 {
+    flex-direction: row;
+}
+
+#imson {
+    flex-direction: row;
+}
+
+#ivtnz {
+    flex-direction: column;
+}
+
+#G {
+    flex-direction: column;
+}
+
+#im16f {
+    flex-direction: row;
+}
+
+#itr52 {
+    flex-direction: column;
+    min-width: 1;
+    height: 67px;
+}
+
+#S {
+    flex-direction: column;
+}
+
+#ish7i {
+    flex-direction: row;
+}
+
+/* ===== Center CTAT inside iframe ===== */
+html, body {
+  height: 100%;
+
+  margin: 0;
+}
+
+.ctat-center {
+  height: 100%;
+  display: flex;
+  align-items: center;      /* vertical center */
+  justify-content: center;  /* horizontal center */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.ctat-box {
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;     /* scroll inside if content is too tall */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+

@@ -9,19 +9,6 @@ type LocationState = {
   firstProblemId: string;
 };
 
-// ---------- type guards ----------
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function isCTATMessage(value: unknown): value is CTATMessage {
-  if (!isObject(value)) return false;
-  if (typeof value.kind !== "string") return false;
-  if (typeof value.ts !== "string") return false;
-  if (!("payload" in value)) return false;
-  return true;
-}
-
 export default function TutorPage() {
   const nav = useNavigate();
   const loc = useLocation();
@@ -41,16 +28,14 @@ export default function TutorPage() {
 
   const iframeSrc = useMemo(() => {
     if (!currentProblemId) return "";
-    return `/ctat/problems/${currentProblemId}/index.html?session_id=${encodeURIComponent(
+    return `/CTAT/${currentProblemId}/HTML/${currentProblemId}.html?session_id=${encodeURIComponent(
       sessionId
     )}`;
   }, [currentProblemId, sessionId]);
 
   // Redirect if user enters /tutor directly
   useEffect(() => {
-    if (!st?.sessionId || !st?.firstProblemId) {
-      nav("/");
-    }
+    if (!st?.sessionId || !st?.firstProblemId) nav("/");
   }, [st, nav]);
 
   function scheduleFlush() {
@@ -65,7 +50,6 @@ export default function TutorPage() {
       try {
         await sendLogs(sessionId, events);
       } catch {
-        // re-queue logs if backend is temporarily unavailable
         bufferRef.current.unshift(...events);
       }
     }, 700);
@@ -83,34 +67,85 @@ export default function TutorPage() {
       }
 
       // next or end
-      if (idx + 1 < queue.length) {
-        setIdx(idx + 1);
-      } else {
-        nav("/end");
-      }
+      if (idx + 1 < queue.length) setIdx(idx + 1);
+      else nav("/end");
     }
 
-    function onMessage(ev: MessageEvent) {
-      const raw = ev.data;
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
 
-      if (!isCTATMessage(raw)) return;
+function isCTATMessage(value: unknown): value is CTATMessage {
+  if (!isObject(value)) return false;
+  if (typeof value.kind !== "string") return false;
+  if (typeof value.ts !== "string") return false;
+  return "payload" in value;
+}
+function extractCdata(tag: string, xml: string): string | null {
+  const re = new RegExp(
+    `<${tag}[^>]*>\\s*<!\\[CDATA\\[(.*?)\\]\\]>\\s*</${tag}>`,
+    "s"
+  );
+  const m = xml.match(re);
+  return m ? m[1] : null;
+}
 
-      if (raw.kind === "CTAT_LOG_EVENT") {
-        bufferRef.current.push(raw);
-        scheduleFlush();
-        return;
-      }
+function onMessage(ev: MessageEvent<unknown>) {
+  const raw = ev.data;
 
-      if (raw.kind === "CTAT_PROBLEM_DONE") {
-        bufferRef.current.push({
-          kind: "CTAT_PROBLEM_DONE",
-          ts: new Date().toISOString(),
-          payload: { problemId: currentProblemId },
-        });
-        scheduleFlush();
-        void handleDone();
-      }
-    }
+  if (!isCTATMessage(raw)) return;
+
+  if (raw.kind === "CTAT_LOG_EVENT") {
+    // ✅ read XML safely from payload (payload is Record<string, unknown>)
+    const xml =
+      typeof raw.payload["xml"] === "string" ? raw.payload["xml"] : "";
+
+    const input = extractCdata("input", xml);
+    const selection = (() => {
+      const m = xml.match(/<selection>(.*?)<\/selection>/s);
+      return m ? m[1] : null;
+    })();
+    const action = (() => {
+      const m = xml.match(/<action>(.*?)<\/action>/s);
+      return m ? m[1] : null;
+    })();
+
+    // ✅ build an enriched event (no duplicates)
+    const enriched: CTATMessage = {
+      kind: "CTAT_LOG_EVENT",
+      ts: raw.ts,
+      payload: {
+        ...raw.payload,
+        problemId: currentProblemId,
+        stepIndex: idx,
+        selection,
+        action,
+        input,
+      },
+    };
+
+    // ✅ THESE are the logs you want to see clearly
+    console.log("CTAT_LOG_EVENT payload (snapshot):", JSON.parse(JSON.stringify(enriched.payload)));
+    console.log("Typed input:", input);
+
+    bufferRef.current.push(enriched);
+    scheduleFlush();
+    return;
+  }
+
+  if (raw.kind === "CTAT_PROBLEM_DONE") {
+    console.log("CTAT_PROBLEM_DONE payload:", raw.payload);
+
+    bufferRef.current.push({
+      kind: "CTAT_PROBLEM_DONE",
+      ts: new Date().toISOString(),
+      payload: { problemId: currentProblemId },
+    });
+    scheduleFlush();
+    void handleDone();
+  }
+}
+
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
@@ -121,7 +156,16 @@ export default function TutorPage() {
   }
 
   return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
+      {/* Header */}
       <div
         style={{
           padding: "10px 12px",
@@ -134,11 +178,30 @@ export default function TutorPage() {
         <strong>Step:</strong> {idx + 1}/{queue.length}
       </div>
 
-      <iframe
-        title="CTAT Tutor"
-        src={iframeSrc}
-        style={{ flex: 1, border: "none" }}
-      />
+      {/* Iframe */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#f5f6f8",
+        }}
+      >
+        <iframe
+          title="CTAT Tutor"
+          src={iframeSrc}
+          style={{
+            width: "100%",
+            maxWidth: 1200,
+            height: "90%",
+            border: "none",
+            borderRadius: 10,
+            boxShadow: "0 10px 30px rgba(173, 173, 173, 0.1)",
+            background: "white",
+          }}
+        />
+      </div>
     </div>
   );
 }

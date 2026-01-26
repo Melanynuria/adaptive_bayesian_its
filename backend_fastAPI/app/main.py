@@ -2,11 +2,11 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Any, Dict, List
-import uuid
+import uuid #Unique session identifiers
 
 app = FastAPI()
 
-# Allow frontend (Vite)
+#Frontend communication
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
@@ -15,7 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------- Models ----------
+# Classes for Data validation
+
 class StartSessionRequest(BaseModel):
     class_code: str
     student_id: str
@@ -25,12 +26,12 @@ class DiagnosticCompleteRequest(BaseModel):
 
 class LogsRequest(BaseModel):
     session_id: str
-    events: List[Dict[str, Any]]
+    events: List[Dict[str, Any]] #List for CTAT interaction events
 
-# ---------- In-memory store (temporary) ----------
-SESSIONS: Dict[str, Dict[str, Any]] = {}
+# SESSION STORAGE (temporary) 
+SESSIONS: Dict[str, Dict[str, Any]] = {} #Reseted when the server stops
 
-# ---------- Routes ----------
+# ROUTES
 @app.get("/")
 def root():
     return {"status": "ok"}
@@ -51,9 +52,10 @@ def start_session(req: StartSessionRequest):
 
     return {
         "session_id": session_id,
-        "first_problem_id": "eq_01",
+        "first_problem_id": "Ex1",
     }
 
+#Receive interaciton events from CTAT and attach them to the correct session
 @app.post("/api/logs")
 def receive_logs(req: LogsRequest):
     if req.session_id in SESSIONS:
@@ -61,9 +63,10 @@ def receive_logs(req: LogsRequest):
 
     return {"ok": True, "received": len(req.events)}
 
+#Called when the diagnostic finishes
 @app.post("/api/session/diagnostic-complete")
 def diagnostic_complete(req: DiagnosticCompleteRequest):
     # Temporary static assignment logic
     return {
-        "assigned_problem_ids": ["eq_02", "eq_03"]
+        "assigned_problem_ids": ["eq_02", "eq_03"] #modify 
     }

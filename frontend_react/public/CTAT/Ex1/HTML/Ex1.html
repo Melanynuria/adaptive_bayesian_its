@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="https://cdn.ctat.cs.cmu.edu/releases/lab/CTAT.css" />
+    <link rel="stylesheet" href="https://cdn.ctat.cs.cmu.edu/releases/lab/html-editor-default.css" />
+    <link rel="stylesheet" href="./Assets/Ex1-styles.css" />
+    <link rel="stylesheet" href="https://cdn.ctat.cs.cmu.edu/releases/lab/guppy/guppy-default-osk.min.css" />
+<script>
+
+  var vars = {
+    question_file: "../FinalBRDs/ex1.brd"
+  };
+
+  function getCommShell() {
+    if (window.CTATCommShell && window.CTATCommShell.commShell)
+      return window.CTATCommShell.commShell;
+    if (window.commShell) return window.commShell;
+    return null;
+  }
+
+  function ctatOnload() {
+    // Start tutor
+    initTutor(vars);
+
+    // Wait for commShell, then attach log listener
+    (function waitForShell() {
+      var shell = getCommShell();
+      if (!shell) {
+        setTimeout(waitForShell, 50);
+        return;
+      }
+
+      var logLibrary = shell.getLoggingLibrary();
+      if (!logLibrary) {
+        console.error("Logging library not available.");
+        return;
+      }
+
+      logLibrary.assignLogListener(function (xmlMessage) {
+        window.parent.postMessage(
+          {
+            kind: "CTAT_LOG_EVENT",
+            ts: new Date().toISOString(),
+            payload: { xml: String(xmlMessage) },
+          },
+          "*"
+        );
+      });
+
+      // Forward Done click too (optional but useful)
+      var doneEl = document.getElementById("done");
+      if (doneEl) {
+        doneEl.addEventListener("click", function () {
+          window.parent.postMessage(
+            {
+              kind: "CTAT_PROBLEM_DONE",
+              ts: new Date().toISOString(),
+              payload: {},
+            },
+            "*"
+          );
+        });
+      }
+
+      console.log("CTAT logging listener attached ✅");
+    })();
+  }
+</script>
+
+
+    <script src="https://cdn.ctat.cs.cmu.edu/releases/lab/guppy/guppy.min.js"></script>
+    <script src="https://cdn.ctat.cs.cmu.edu/releases/lab/guppy/guppy_osk.js"></script>
+    <script src="https://cdn.ctat.cs.cmu.edu/releases/lab/jquery.min.js"></script>
+    <script src="https://cdn.ctat.cs.cmu.edu/releases/lab/nools.js"></script>
+    <script src="https://cdn.ctat.cs.cmu.edu/releases/lab/ctat.min.js"></script>
+    <script src="https://cdn.ctat.cs.cmu.edu/releases/lab/ctatloader.js"></script>
+    
+  </head>
+
+  <body class="ctat-center">
+    <div class="ctat-box">
+
+      <section id="ikrx" class="flexrow">
+        <p id="i7kyk" class="paragraph">Fem un pressupost</p>
+      </section>
+
+      <section id="iz8oi" class="flexrow">
+        <p id="iswhj" class="paragraph">
+          1. Van contractar una proveïdora d'aigua que cobraba S € pel servei i G € per cada ampolla gran.
+          Si es van gastar T € en total, quantes ampolles van consumir?
+        </p>
+
+        <div id="iueh">
+          Tingues en compte que: preu final = cost del servei + cost del total d'ampolles
+        </div>
+      </section>
+
+      <section id="iocy" class="flexrow">
+        <div id="imsd5" class="flexcolumn"></div>
+
+        <div id="ish7i" class="flexcolumn">
+          <div id="itr52" class="CTATTextField">
+            <div id="iihbs"><br /></div>
+            Cost del servei: S =
+          </div>
+          <div id="S" class="CTATTextInput"></div>
+        </div>
+
+        <div id="im16f" class="flexcolumn">
+          <div id="ivtnz" class="CTATTextField">
+            <div><br /></div>
+            Cost ampolla Gran: G =
+          </div>
+          <div id="G" class="CTATTextInput"></div>
+        </div>
+
+        <div id="imson" class="flexcolumn"></div>
+      </section>
+
+      <section id="igwy7" class="flexrow">
+        <div id="i03w9" class="CTATTextField">
+          <br />
+          - Indica quina sería l'expressió del cost del total d'ampolles, si "a" representa el número d'ampolles
+          <br /><br /><br />
+        </div>
+        <!-- ✅ changed id to match CSS -->
+        <div id="eq1-1" class="CTATTextInput"></div>
+      </section>
+
+      <section id="ihxd3" class="flexrow">
+        <div id="iye1q" class="CTATTextField">
+          <br />
+          Ara, indica quina sería l'expressió final del cost
+          <br />
+        </div>
+        <!-- ✅ changed id to match CSS -->
+        <div id="eq1-2" class="CTATTextInput"></div>
+      </section>
+
+      <section id="ip3wh" class="flexrow">
+        <div id="iwprv" class="CTATTextField">
+          <br />
+          Si has acabat, clica aquí
+          <br />
+        </div>
+        <div id="done" class="CTATDoneButton"></div>
+      </section>
+
+    </div>
+  </body>
+</html>
