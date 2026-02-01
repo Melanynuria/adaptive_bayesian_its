@@ -158,7 +158,7 @@ function onMessage(ev: MessageEvent<unknown>) {
   return (
     <div
       style={{
-        width: "100%",
+        width: "100vw",
         height: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -192,9 +192,9 @@ function onMessage(ev: MessageEvent<unknown>) {
           title="CTAT Tutor"
           src={iframeSrc}
           style={{
-            width: "100%",
+            width: "100vw",
             maxWidth: 1200,
-            height: "90%",
+            height: "80vh",
             border: "none",
             borderRadius: 10,
             boxShadow: "0 10px 30px rgba(173, 173, 173, 0.1)",
