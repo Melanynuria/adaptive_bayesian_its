@@ -1,16 +1,19 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Any, Dict, List
-import uuid #Unique session identifiers
+from pathlib import Path
+import uuid
 
 app = FastAPI()
 
 #Frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -32,9 +35,10 @@ class LogsRequest(BaseModel):
 SESSIONS: Dict[str, Dict[str, Any]] = {} #Reseted when the server stops
 
 # ROUTES
-@app.get("/")
-def root():
+@app.get("/api/health")
+def health():
     return {"status": "ok"}
+
 
 @app.post("/api/session/start")
 def start_session(req: StartSessionRequest):
@@ -70,3 +74,21 @@ def diagnostic_complete(req: DiagnosticCompleteRequest):
     return {
         "assigned_problem_ids": ["eq_02", "eq_03"] #modify 
     }
+
+# Project root = backend_fastAPI/app/main.py -> parents:
+# parents[0]=app, [1]=backend_fastAPI, [2]=project root
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+DIST_DIR = PROJECT_ROOT / "frontend_react" / "dist"
+CTAT_DIR = PROJECT_ROOT / "frontend_react" / "public" / "CTAT"
+
+# Serve CTAT files (optional if CTAT already ends up inside dist/CTAT after build)
+if CTAT_DIR.exists():
+    app.mount("/CTAT", StaticFiles(directory=CTAT_DIR), name="ctat")
+
+# Serve built React app
+# This makes "/" return your React index.html, and serves assets from dist/
+if not DIST_DIR.exists():
+    raise RuntimeError(f"Frontend build not found at {DIST_DIR}. Run: cd frontend_react && npm run build")
+
+app.mount("/", StaticFiles(directory=DIST_DIR, html=True), name="frontend")

@@ -2,37 +2,19 @@
 │   └── app
 │       ├── api
 │       ├── models
-│       └── services
-├── CTAT
-│   └── Ex1
-│       ├── FinalBRDs
-│       └── HTML
-│           └── Assets
+│       ├── services
+│       ├── main.py
+│       └── __init__.py
 ├── database
 └── frontend_react
     ├── public
+    │   └── CTAT
+    │       └── Ex1
+    │           ├── FinalBRDs
+    │           └── HTML
+    │               └── Assets
     └── src
         ├── api
         ├── assets
         ├── pages
         └── types
-
-
-TODO: RUN THIS
-
-function Show-Tree($Path, $Prefix = "") {
-  $items = Get-ChildItem $Path -Directory | Where-Object {
-    $_.Name -notmatch '^(\.venv|node_modules|__pycache__|\.git|\.vite)$'
-  }
-
-  for ($i = 0; $i -lt $items.Count; $i++) {
-    $isLast = ($i -eq $items.Count - 1)
-    $connector = if ($isLast) { "└── " } else { "├── " }
-    Write-Output "$Prefix$connector$($items[$i].Name)"
-
-    $newPrefix = if ($isLast) { "$Prefix    " } else { "$Prefix│   " }
-    Show-Tree $items[$i].FullName $newPrefix
-  }
-}
-
-Show-Tree (Get-Location).Path | Out-File structure.txt -Encoding utf8
