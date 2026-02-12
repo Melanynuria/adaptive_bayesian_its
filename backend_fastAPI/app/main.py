@@ -1,11 +1,14 @@
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from starlette.middleware.cors import CORSMiddleware
+from fastapi import FastAPI                             #API
+from fastapi.staticfiles import StaticFiles             #serves static files
+from fastapi.responses import FileResponse              
+from starlette.middleware.cors import CORSMiddleware    #allows frontend and backend communication through browser
 from pydantic import BaseModel
 from typing import Any, Dict, List
 from pathlib import Path
-import uuid
+import uuid      
+from datetime import datetime, timezone
+import json
+import sqlite3
 
 app = FastAPI()
 
@@ -17,9 +20,39 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+#-----------------------------------
+# DATABASE SETUP
+#-----------------------------------
+
+DB_PATH = Path("data/app.db")
+DB_PATH.parent.mkdir(exist_ok=True)
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS attempts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        session_id TEXT,
+        problem_id TEXT,
+        step_index INTEGER,
+        selection TEXT,
+        input TEXT,
+        correctness TEXT,
+        timestamp TEXT
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+# Initialize database when app starts
+init_db()
+
+
 
 # Classes for Data validation
-
 class StartSessionRequest(BaseModel):
     class_code: str
     student_id: str
@@ -59,13 +92,57 @@ def start_session(req: StartSessionRequest):
         "first_problem_id": "Ex1",
     }
 
-#Receive interaciton events from CTAT and attach them to the correct session
-@app.post("/api/logs")
-def receive_logs(req: LogsRequest):
-    if req.session_id in SESSIONS:
-        SESSIONS[req.session_id]["events"].extend(req.events)
 
-    return {"ok": True, "received": len(req.events)}
+def append_jsonl(path: Path, obj: dict):
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(obj, ensure_ascii=False) + "\n")
+
+@app.post("/api/logs")
+async def logs(req: LogsRequest):
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    for e in req.events:
+        p = e.get("payload", {})
+        xml = p.get("xml", "")
+
+        is_attempt = 'name="ATTEMPT"' in xml
+
+        if is_attempt:
+            student_input = p.get("input")
+            session_id = req.session_id
+            problem_id = p.get("problemId")
+            step_index = p.get("stepIndex")
+            selection = p.get("selection")
+            timestamp = e.get("ts")
+            
+
+            correctness = None
+            if "INCORRECT" in xml:
+                correctness = "INCORRECT"
+            elif "CORRECT" in xml:
+                correctness = "CORRECT"
+
+            cursor.execute("""
+                INSERT INTO attempts
+                (session_id, problem_id, step_index, selection, input, correctness, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (
+                session_id,
+                problem_id,
+                step_index,
+                selection,
+                student_input,
+                correctness,
+                timestamp
+            ))
+
+    conn.commit()
+    conn.close()
+
+    return {"status": "saved"}
+
 
 #Called when the diagnostic finishes
 @app.post("/api/session/diagnostic-complete")
@@ -87,7 +164,6 @@ if CTAT_DIR.exists():
     app.mount("/CTAT", StaticFiles(directory=CTAT_DIR), name="ctat")
 
 # Serve built React app
-# This makes "/" return your React index.html, and serves assets from dist/
 if not DIST_DIR.exists():
     raise RuntimeError(f"Frontend build not found at {DIST_DIR}. Run: cd frontend_react && npm run build")
 
