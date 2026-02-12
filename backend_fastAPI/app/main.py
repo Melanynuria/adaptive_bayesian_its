@@ -24,32 +24,41 @@ app.add_middleware(
 # DATABASE SETUP
 #-----------------------------------
 
-DB_PATH = Path("data/app.db")
+# -----------------------------------
+# DATABASE SETUP
+# -----------------------------------
+
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR / "data" / "app.db"
 DB_PATH.parent.mkdir(exist_ok=True)
 
 def init_db():
+    print("Initializing DB at:", DB_PATH.resolve())
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS attempts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        session_id TEXT,
-        problem_id TEXT,
-        step_index INTEGER,
-        selection TEXT,
-        input TEXT,
-        correctness TEXT,
-        timestamp TEXT
-    )
+        CREATE TABLE IF NOT EXISTS attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+            problem_id TEXT,
+            step_index INTEGER,
+            selection TEXT,
+            input TEXT,
+            correctness TEXT,
+            timestamp TEXT
+        )
     """)
 
     conn.commit()
     conn.close()
 
+    print("Database initialized.")
+
+
 # Initialize database when app starts
 init_db()
-
 
 
 # Classes for Data validation

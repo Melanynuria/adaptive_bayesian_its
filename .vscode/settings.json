@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "tfg",
+            "database": "backend_fastAPI/app/data/app.db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
