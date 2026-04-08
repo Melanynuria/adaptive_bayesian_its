@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Large datasets
+backend_fastAPI/app/dataset/*.txt
+backend_fastAPI/app/dataset/*.csv
+backend_fastAPI/app/dataset/*.xlsx
+backend_fastAPI/app/dataset/*.ipynb_checkpoints
