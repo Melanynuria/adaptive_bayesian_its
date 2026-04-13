@@ -1,14 +1,61 @@
-# Python
-__pycache__/
-*.pyc
-
-# Virtual environments
 .venv/
-venv/
-env/
+**/.venv/
+.venv-pybkt/
+**/.venv-pybkt/
+backend_fastAPI/.venv/
 
-# Large datasets
-backend_fastAPI/app/dataset/*.txt
-backend_fastAPI/app/dataset/*.csv
-backend_fastAPI/app/dataset/*.xlsx
-backend_fastAPI/app/dataset/*.ipynb_checkpoints
+backend_fastAPI/app/data/raw/
+backend_fastAPI/app/data/processed/
+backend_fastAPI/app/data/outputs/
+
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.env
+.env.*
+*.log# Virtual environments
+.venv/
+**/.venv/
+.venv-pybkt/
+**/.venv-pybkt/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+*.env
+
+# Logs
+*.log
+
+# Data folders
+backend_fastAPI/app/data/raw/
+backend_fastAPI/app/data/processed/
+backend_fastAPI/app/data/outputs/
+
+# Optional generated outputs
+backend_fastAPI/app/data/outputs/
+
+# Model artifacts
+backend_fastAPI/models/
+*.pkl
+*.joblib
+
+# Notebook exports / temp
+*.tmp
+*.bak
