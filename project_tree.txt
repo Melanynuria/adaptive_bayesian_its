@@ -14,3 +14,18 @@
 }
 
 Show-Tree (Get-Location).Path | Out-File structure.txt -Encoding utf8
+------------------------------------------------------------------------------------START EXECUTION
+backend_fastAPI terminal
+
+cd backend_fastAPI
+.\.venv\Scripts\Activate.ps1
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+frontend_react
+	npm run dev
+
+open in browser 
+	http://localhost:5173/
+
+
+-> loot at terminal

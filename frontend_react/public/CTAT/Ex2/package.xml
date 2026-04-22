@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Package label="Ex1" save_state="true">
+<Package label="Ex2" save_state="true">
   <Problems>
   </Problems>
   <ProblemSets>
@@ -18,8 +18,8 @@
     </ProblemSet>
   </ProblemSets>
   <Assets>
-    <Asset name="ex1.brd" path="FinalBRDs"/>
-    <Asset name="Ex1.html" path="HTML"/>
-    <Asset name="Ex1-styles.css" path="HTML/Assets"/>
+    <Asset name="ex2.brd" path="FinalBRDs"/>
+    <Asset name="ex2.html" path="HTML"/>
+    <Asset name="ex2-styles.css" path="HTML/Assets"/>
   </Assets>
 </Package>

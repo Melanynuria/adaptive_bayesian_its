@@ -98,7 +98,7 @@ def start_session(req: StartSessionRequest):
 
     return {
         "session_id": session_id,
-        "first_problem_id": "Ex1",
+        "first_problem_id": "Ex2",
     }
 
 
