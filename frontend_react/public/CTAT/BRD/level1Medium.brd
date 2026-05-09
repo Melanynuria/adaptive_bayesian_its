@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
-<stateGraph firstCheckAllStates="true" caseInsensitive="true" unordered="true" lockWidget="true" hintPolicy="Use Both Kinds of Bias" version="4.0" suppressStudentFeedback="Show All Feedback" highlightRightSelection="true" confirmDone="false" startStateNodeName="" tutorType="Example-tracing Tutor">
+<stateGraph firstCheckAllStates="true" caseInsensitive="true" unordered="true" lockWidget="true" hintPolicy="Use Both Kinds of Bias" version="4.0" suppressStudentFeedback="Show All Feedback" highlightRightSelection="true" confirmDone="false" startStateNodeName="%(startStateNodeName)%" tutorType="Example-tracing Tutor">
     <startNodeMessages>
         <message>            <verb>NotePropertySet</verb>            <properties>                <MessageType>StartProblem</MessageType>                <ProblemName>empty</ProblemName>            </properties>        </message>
         <message>            <verb>NotePropertySet</verb>            <properties>                <MessageType>StartStateEnd</MessageType>            </properties>        </message>
@@ -32,48 +32,48 @@
         <text>state4</text>
         <uniqueID>4</uniqueID>
         <dimension>
-            <x>217</x>
-            <y>185</y>
+            <x>-83</x>
+            <y>335</y>
         </dimension>
     </node>
     <node locked="false" doneState="false">
         <text>state5</text>
         <uniqueID>5</uniqueID>
         <dimension>
-            <x>217</x>
-            <y>335</y>
+            <x>-83</x>
+            <y>485</y>
         </dimension>
     </node>
     <node locked="false" doneState="false">
         <text>state6</text>
         <uniqueID>6</uniqueID>
         <dimension>
-            <x>201</x>
-            <y>485</y>
+            <x>-83</x>
+            <y>635</y>
         </dimension>
     </node>
     <node locked="false" doneState="false">
         <text>state7</text>
         <uniqueID>7</uniqueID>
         <dimension>
-            <x>217</x>
-            <y>635</y>
+            <x>-83</x>
+            <y>785</y>
         </dimension>
     </node>
     <node locked="false" doneState="false">
         <text>state8</text>
         <uniqueID>8</uniqueID>
         <dimension>
-            <x>217</x>
-            <y>785</y>
+            <x>-83</x>
+            <y>935</y>
         </dimension>
     </node>
     <node locked="false" doneState="false">
         <text>state9</text>
         <uniqueID>9</uniqueID>
         <dimension>
-            <x>217</x>
-            <y>935</y>
+            <x>-83</x>
+            <y>1085</y>
         </dimension>
     </node>
     <edge>
@@ -82,55 +82,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>1</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>8561a690-7d8d-3fd2-edaf-5987eb938375</transaction_id><Selection><value>eq</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x + 5 = 13]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>4b1da6fa-e4c1-9880-857f-3dc0d8513a71</transaction_id><Selection><value>l-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x+8-2]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "x+5=9" in the highlighted field.]]></hintMessage>
-            <callbackFn></callbackFn>
-            <actionType>Correct Action</actionType>
-            <oldActionType>Correct Action</oldActionType>
-            <checkedStatus>Never Checked</checkedStatus>
-            <matchers Concatenation="true">
-                <Selection>
-                    <matcher>
-                        <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[eq]]></matcherParameter>
-                    </matcher>
-                </Selection>
-                <Action>
-                    <matcher>
-                        <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
-                    </matcher>
-                </Action>
-                <Input>
-                    <matcher>
-                        <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[x + 5 = 13]]></matcherParameter>
-                    </matcher>
-                </Input>
-                <Actor linkTriggered="false">Tutor (unevaluated)</Actor>
-            </matchers>
-        </actionLabel>
-        <preCheckedStatus>No-Applicable</preCheckedStatus>
-        <rule>
-            <text>unnamed</text>
-            <indicator>-1</indicator>
-        </rule>
-        <sourceID>1</sourceID>
-        <destID>2</destID>
-        <traversalCount>0</traversalCount>
-    </edge>
-    <edge>
-        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
-            <studentHintRequest></studentHintRequest>
-            <stepSuccessfulCompletion></stepSuccessfulCompletion>
-            <stepStudentError></stepStudentError>
-            <uniqueID>2</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>2efd65fe-28d8-ee10-dc73-527ee671962f</transaction_id><Selection><value>l-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x + 5]]></value></Input></properties></message>
-            <buggyMessage></buggyMessage>
-            <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "x+5" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "x+8-2" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -151,7 +106,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[x + 5]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[x+8-2]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Tutor (unevaluated)</Actor>
@@ -162,8 +117,8 @@
             <text>unnamed</text>
             <indicator>-1</indicator>
         </rule>
-        <sourceID>2</sourceID>
-        <destID>3</destID>
+        <sourceID>1</sourceID>
+        <destID>2</destID>
         <traversalCount>0</traversalCount>
     </edge>
     <edge>
@@ -171,11 +126,11 @@
             <studentHintRequest></studentHintRequest>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
-            <uniqueID>3</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>429412a0-a05d-767e-930c-fa22d0878298</transaction_id><Selection><value>r-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[13]]></value></Input></properties></message>
+            <uniqueID>2</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>3953827c-7def-429d-cdb7-d4b6bf8b34b3</transaction_id><Selection><value>r-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "9" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "12" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -196,7 +151,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[13]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[12]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Tutor (unevaluated)</Actor>
@@ -207,8 +162,8 @@
             <text>unnamed</text>
             <indicator>-1</indicator>
         </rule>
-        <sourceID>3</sourceID>
-        <destID>4</destID>
+        <sourceID>2</sourceID>
+        <destID>3</destID>
         <traversalCount>0</traversalCount>
     </edge>
     <edge>
@@ -216,11 +171,11 @@
             <studentHintRequest></studentHintRequest>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
-            <uniqueID>4</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>9f7852c2-0a49-28ba-f6de-3d46aabbd0f1</transaction_id><Selection><value>l-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x + 5 - 5]]></value></Input></properties></message>
+            <uniqueID>3</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>b71f87cb-1920-b1d9-036b-b04bbdf0900b</transaction_id><Selection><value>l-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x+6]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "x+5-5" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "x+6" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -241,7 +196,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[x + 5 - 5]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[x+6]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -249,11 +204,11 @@
         </actionLabel>
         <preCheckedStatus>No-Applicable</preCheckedStatus>
         <rule>
-            <text>unnamed</text>
+            <text><![CDATA[simplification simplification]]></text>
             <indicator>-1</indicator>
         </rule>
-        <sourceID>4</sourceID>
-        <destID>5</destID>
+        <sourceID>3</sourceID>
+        <destID>4</destID>
         <traversalCount>0</traversalCount>
     </edge>
     <edge>
@@ -261,11 +216,11 @@
             <studentHintRequest></studentHintRequest>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
-            <uniqueID>5</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>5233b080-3ace-4987-3205-38c9c243d97a</transaction_id><Selection><value>r-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[13 - 5]]></value></Input></properties></message>
+            <uniqueID>4</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>af3887b2-4617-9a85-c3f5-6906e8ef40fd</transaction_id><Selection><value>r-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "9-5" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "12" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -286,7 +241,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[13 - 5]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[12]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -297,8 +252,8 @@
             <text>unnamed</text>
             <indicator>-1</indicator>
         </rule>
-        <sourceID>5</sourceID>
-        <destID>6</destID>
+        <sourceID>4</sourceID>
+        <destID>5</destID>
         <traversalCount>0</traversalCount>
     </edge>
     <edge>
@@ -306,11 +261,11 @@
             <studentHintRequest></studentHintRequest>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
-            <uniqueID>6</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>5b9c5a0a-ebbf-2454-4d24-0961a690ef56</transaction_id><Selection><value>l-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x]]></value></Input></properties></message>
+            <uniqueID>5</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>d4fada42-0b00-d9a8-0b5d-55ad9db8779b</transaction_id><Selection><value>l-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x+6-6]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "x" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "x+6-6" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -331,7 +286,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[x]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[x+6-6]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -339,11 +294,11 @@
         </actionLabel>
         <preCheckedStatus>No-Applicable</preCheckedStatus>
         <rule>
-            <text>unnamed</text>
+            <text><![CDATA[move_contants move_contants]]></text>
             <indicator>-1</indicator>
         </rule>
-        <sourceID>6</sourceID>
-        <destID>7</destID>
+        <sourceID>5</sourceID>
+        <destID>6</destID>
         <traversalCount>0</traversalCount>
     </edge>
     <edge>
@@ -351,11 +306,11 @@
             <studentHintRequest></studentHintRequest>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
-            <uniqueID>7</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>498a71af-98ab-6313-c856-d3c01b17fed6</transaction_id><Selection><value>r-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[8]]></value></Input></properties></message>
+            <uniqueID>6</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>6fa76935-843d-01cc-bf11-8b0240baa3b4</transaction_id><Selection><value>r-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12-6]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "4" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "12-6" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -376,7 +331,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[8]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[12-6]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -384,7 +339,52 @@
         </actionLabel>
         <preCheckedStatus>No-Applicable</preCheckedStatus>
         <rule>
-            <text>unnamed</text>
+            <text><![CDATA[move_contants move_contants]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>6</sourceID>
+        <destID>7</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>7</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>3c632f78-dfcb-8c3b-2482-7d88332911ed</transaction_id><Selection><value>l-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Please enter "x" in the highlighted field.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-4]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[simplification simplification]]></text>
             <indicator>-1</indicator>
         </rule>
         <sourceID>7</sourceID>
@@ -397,10 +397,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>8</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>35c65413-6a26-c90d-a1ca-a58ec3498992</transaction_id><Selection><value>done</value></Selection><Action><value>ButtonPressed</value></Action><Input><value><![CDATA[-1]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>0022cfbe-c170-a330-0d26-cf19788dda93</transaction_id><Selection><value>r-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[6]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please click the highlighted button.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "6" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -409,19 +409,19 @@
                 <Selection>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[done]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[r-4]]></matcherParameter>
                     </matcher>
                 </Selection>
                 <Action>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[ButtonPressed]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
                     </matcher>
                 </Action>
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[-1]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[6]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -429,13 +429,25 @@
         </actionLabel>
         <preCheckedStatus>No-Applicable</preCheckedStatus>
         <rule>
-            <text>unnamed</text>
+            <text><![CDATA[simplification simplification]]></text>
             <indicator>-1</indicator>
         </rule>
         <sourceID>8</sourceID>
         <destID>9</destID>
         <traversalCount>0</traversalCount>
     </edge>
+    <productionRule>
+        <ruleName><![CDATA[simplification]]></ruleName>
+        <productionSet><![CDATA[simplification]]></productionSet>
+        <label><![CDATA[simplification]]></label>
+        <description><![CDATA[simplification simplification]]></description>
+    </productionRule>
+    <productionRule>
+        <ruleName><![CDATA[move_contants]]></ruleName>
+        <productionSet><![CDATA[move_contants]]></productionSet>
+        <label><![CDATA[move_contants]]></label>
+        <description><![CDATA[move_contants move_contants]]></description>
+    </productionRule>
     <EdgesGroups ordered="false">
     </EdgesGroups>
 </stateGraph>

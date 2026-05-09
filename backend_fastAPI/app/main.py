@@ -158,7 +158,7 @@ async def logs(req: LogsRequest):
 def diagnostic_complete(req: DiagnosticCompleteRequest):
     # Temporary static assignment logic
     return {
-        "assigned_problem_ids": ["eq_02", "eq_03"] #modify 
+        "assigned_problem_ids": ["Ex1", "eq_03"] #modify 
     }
 
 # Project root = backend_fastAPI/app/main.py -> parents:

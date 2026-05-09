@@ -19,7 +19,7 @@
   </ProblemSets>
   <Assets>
     <Asset name="ex1.brd" path="FinalBRDs"/>
-    <Asset name="Ex1.html" path="HTML"/>
-    <Asset name="Ex1-styles.css" path="HTML/Assets"/>
+    <Asset name="level1Easy.html" path="HTML"/>
+    <Asset name= "level1Easy-styles.css" path="HTML/Assets"/>
   </Assets>
 </Package>

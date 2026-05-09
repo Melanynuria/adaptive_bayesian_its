@@ -1,0 +1,735 @@
+#io07l {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 5%;
+    justify-content: center;
+    align-items: center;
+}
+
+#ic0m {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+}
+
+#iyap {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+}
+
+#eq1-2 {
+    width: 150px;
+    display: inline-block;
+    padding: 5px 5px 5px 10px;
+}
+
+#i2uhh {
+    margin: 0- 0px 0px 0px;
+    padding: 0px 0px 0px 15px;
+    color: #616161;
+    display: inline-block;
+}
+
+#ig586 {
+    height: 76px;
+}
+
+#io1k {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+}
+
+#eq1-1 {
+    display: inline-block;
+    width: 150px;
+    padding: 5px 5px 5px 15px;
+}
+
+#izpa {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+}
+
+#ic4g {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+    background-color: #e0e0e0;
+}
+
+#icmg {
+    height: 94px;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+#io9i {
+    width: 90%;
+    align-items: center;
+}
+
+#r-equation {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+#eq {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 50%;
+    text-align: center;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: 300;
+    font-size: 200%;
+    background-color: #adb3ff;
+    height: 90%;
+    margin: 0px 5% 0px 5%;
+    float: left;
+    padding: 5px 0px 5px 0px;
+}
+
+#step1 {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#igoka {
+    width: 2%;
+    flex-direction: row;
+}
+
+#i67if {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#isn76 {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 5%;
+}
+
+#ikcyn {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#r-6 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#i8zfq {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+#inici {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+}
+
+#i76cv {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#l-6 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#ibsgn {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+#idr32 {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#i7ux3 {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#i51co {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 5%;
+}
+
+#ihd0k {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#iir04 {
+    width: 2%;
+    flex-direction: row;
+}
+
+#pas4 {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+    float: left;
+}
+
+#i05dk {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#l-4 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #dbdbdb;
+}
+
+#it8yg {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+#iqjne {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#ioh2t {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 5%;
+}
+
+#i55ne {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#i7ya7 {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#ip1nf {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#ixww8i {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#iwj1r {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#isvey {
+    width: 2%;
+    flex-direction: row;
+}
+
+#i5ovu {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    color: #595959;
+}
+
+#l-3 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #dbdbdb;
+}
+
+#is456 {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+#ijihl {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#ih1ts {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#ilc2k {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 5%;
+}
+
+#iw1hx {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#ir8qe {
+    width: 2%;
+    flex-direction: row;
+}
+
+#ia92w {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#l-2 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #dbdbdb;
+}
+
+#imn8y {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+#iwcph {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#i25dk {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 5%;
+}
+
+#ihdd6 {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 25%;
+}
+
+#iq6by {
+    width: 2%;
+    flex-direction: row;
+}
+
+#pas1 {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+    float: left;
+}
+
+#pas2 {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+    float: left;
+}
+
+#iqe2p {
+    width: 10%;
+    margin: 0 10px 0 0;
+}
+
+#done {
+    width: 10%;
+    margin: 0px 0px 0px 10px;
+}
+
+#ieb6h {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin: 15px 0px 0px 0px;
+    min-height: 100px;
+}
+
+#ig81n {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 100%;
+    margin: 0- 0px 0px 0px;
+    min-height: 100%;
+}
+
+#i37s7 {
+    width: 10%;
+    min-width: 1vh;
+}
+
+#i1rd {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+    background-color: #e3e3e3;
+}
+
+#pas3 {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+    float: left;
+}
+
+#l-1 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#r-1 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#r-2 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#r-3 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#r-4 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#l-7 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#r-7 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#l-5 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#r-5 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#Enun {
+    font-family: Tahoma, Geneva, sans-serif;
+    float: left;
+    width: 31%;
+    height: 20%;
+    font-size: 150%;
+    padding: 0px 0px 0px 6px;
+}
+
+#row-1 {
+    margin: 10px 0 0 0;
+}
+
+#i13yk {
+    width: 10%;
+    min-width: 1vh;
+}
+
+#title {
+    width: 200%;
+    min-width: 1%;
+    min-height: 1.4%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: 700;
+    font-size: 250%;
+    margin: 0px 10px 0px 5vh;
+    height: 8vh;
+    float: none;
+    text-align: center;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+}
+
+#i8s8q {
+    justify-content: center;
+}
+
+#i7tl {
+    padding: 0px 0px 0px 240px;
+    transition: padding 0.5s ease-in-out;
+}
+
+#initText {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 80%;
+    text-align: justify;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: 400;
+    font-size: 120%;
+    background-color: #dedede;
+    height: 90%;
+    margin: 0px 5% 0px 5%;
+    float: left;
+    padding: 5px 10px 5px 10px;
+}
+
+#pas6 {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+    float: left;
+}
+
+#pas5 {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+    float: left;
+}
+
+#ivfd2 {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#i87iz {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#io62m {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#iqi5s {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 5%;
+}
