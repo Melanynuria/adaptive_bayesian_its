@@ -98,7 +98,7 @@ def start_session(req: StartSessionRequest):
 
     return {
         "session_id": session_id,
-        "first_problem_id": "Ex2",
+        "first_problem_id": "level1Easy_v1",
     }
 
 
@@ -156,9 +156,25 @@ async def logs(req: LogsRequest):
 #Called when the diagnostic finishes
 @app.post("/api/session/diagnostic-complete")
 def diagnostic_complete(req: DiagnosticCompleteRequest):
-    # Temporary static assignment logic
     return {
-        "assigned_problem_ids": ["Ex1", "eq_03"] #modify 
+        "assigned_problem_ids": [
+            # Level 1
+            "level1Easy_v2", "level1Easy_v3", "level1Easy_v4", "level1Easy_v5",
+            "level1Easy_v6", "level1Easy_v7", "level1Easy_v8", "level1Easy_v9", "level1Easy_v10",
+            "level1Medium_v1", "level1Medium_v2", "level1Medium_v3", "level1Medium_v4", "level1Medium_v5",
+            "level1Difficult_v1", "level1Difficult_v2", "level1Difficult_v3", "level1Difficult_v4", "level1Difficult_v5",
+            # Level 2
+            "level2Easy_v1", "level2Easy_v2", "level2Easy_v3", "level2Easy_v4", "level2Easy_v5",
+            "level2Medium_v1", "level2Medium_v2", "level2Medium_v3", "level2Medium_v4", "level2Medium_v5",
+            "level2Medium_v6", "level2Medium_v7", "level2Medium_v8", "level2Medium_v9", "level2Medium_v10",
+            "level2Difficult_v1", "level2Difficult_v2", "level2Difficult_v3", "level2Difficult_v4",
+            # Level 3
+            "level3Easy_v1", "level3Easy_v2", "level3Easy_v3", "level3Easy_v4", "level3Easy_v5",
+            "level3Easy_v6", "level3Easy_v7", "level3Easy_v8", "level3Easy_v9", "level3Easy_v10",
+            "level3Medium_v1", "level3Medium_v2", "level3Medium_v3", "level3Medium_v4", "level3Medium_v5",
+            "level3Difficult_v1", "level3Difficult_v2", "level3Difficult_v3", "level3Difficult_v4", "level3Difficult_v5",
+            "level3Difficult_v6", "level3Difficult_v7", "level3Difficult_v8", "level3Difficult_v9", "level3Difficult_v10",
+        ]
     }
 
 # Project root = backend_fastAPI/app/main.py -> parents:

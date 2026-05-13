@@ -28,9 +28,11 @@ export default function TutorPage() {
 
   const iframeSrc = useMemo(() => {
     if (!currentProblemId) return "";
-    return `/CTAT/${currentProblemId}/HTML/${currentProblemId}.html?session_id=${encodeURIComponent(
-      sessionId
-    )}`;
+    const versionMatch = currentProblemId.match(/^(.+)(_v\d+)$/);
+    const path = versionMatch
+      ? `/CTAT/${versionMatch[1]}/HTML/HTML_${currentProblemId}.html`
+      : `/CTAT/${currentProblemId}/HTML/${currentProblemId}.html`;
+    return `${path}?session_id=${encodeURIComponent(sessionId)}`;
   }, [currentProblemId, sessionId]);
 
   // Redirect if user enters /tutor directly

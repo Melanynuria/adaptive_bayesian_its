@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package label="Firstdegreelinearequations" description="Exercises for the TFG &quot;Solve2Learn: An Adaptive Algebra Tutoring System Based on Bayesian Knowledge Tracing&quot;" save_state="true">
+  <Problems>
+  </Problems>
+  <ProblemSets>
+  </ProblemSets>
+  <Assets>
+    <Asset name="FirstDegreeLinearEq" path=".." asset_type="directory"/>
+    <Asset name="level1Difficult" asset_type="directory"/>
+    <Asset name="Assets" path="level1Difficult" asset_type="directory"/>
+    <Asset name="level1Difficult-styles.css" path="level1Difficult/Assets" asset_type="file"/>
+    <Asset name="HTML_level1Difficult_v1.html" path="level1Difficult" asset_type="file"/>
+    <Asset name="HTML_level1Difficult_v2.html" path="level1Difficult" asset_type="file"/>
+    <Asset name="HTML_level1Difficult_v3.html" path="level1Difficult" asset_type="file"/>
+    <Asset name="HTML_level1Difficult_v4.html" path="level1Difficult" asset_type="file"/>
+    <Asset name="HTML_level1Difficult_v5.html" path="level1Difficult" asset_type="file"/>
+    <Asset name="level1Difficult_v1.brd" path="level1Difficult" asset_type="file"/>
+    <Asset name="level1Difficult_v2.brd" path="level1Difficult" asset_type="file"/>
+    <Asset name="level1Difficult_v3.brd" path="level1Difficult" asset_type="file"/>
+    <Asset name="level1Difficult_v4.brd" path="level1Difficult" asset_type="file"/>
+    <Asset name="level1Difficult_v5.brd" path="level1Difficult" asset_type="file"/>
+    <Asset name="level1Easy" asset_type="directory"/>
+    <Asset name="Assets" path="level1Easy" asset_type="directory"/>
+    <Asset name="level1Easy-styles.css" path="level1Easy/Assets" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v1.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v10.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v2.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v3.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v4.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v5.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v6.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v7.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v8.html" path="level1Easy" asset_type="file"/>
+    <Asset name="HTML_level1Easy_v9.html" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v1.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v10.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v2.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v3.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v4.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v5.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v6.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v7.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v8.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Easy_v9.brd" path="level1Easy" asset_type="file"/>
+    <Asset name="level1Medium" asset_type="directory"/>
+    <Asset name="Assets" path="level1Medium" asset_type="directory"/>
+    <Asset name="level1Medium-styles.css" path="level1Medium/Assets" asset_type="file"/>
+    <Asset name="HTML_level1Medium_v1.html" path="level1Medium" asset_type="file"/>
+    <Asset name="HTML_level1Medium_v2.html" path="level1Medium" asset_type="file"/>
+    <Asset name="HTML_level1Medium_v3.html" path="level1Medium" asset_type="file"/>
+    <Asset name="HTML_level1Medium_v4.html" path="level1Medium" asset_type="file"/>
+    <Asset name="HTML_level1Medium_v5.html" path="level1Medium" asset_type="file"/>
+    <Asset name="level1Medium_v1.brd" path="level1Medium" asset_type="file"/>
+    <Asset name="level1Medium_v2.brd" path="level1Medium" asset_type="file"/>
+    <Asset name="level1Medium_v3.brd" path="level1Medium" asset_type="file"/>
+    <Asset name="level1Medium_v4.brd" path="level1Medium" asset_type="file"/>
+    <Asset name="level1Medium_v5.brd" path="level1Medium" asset_type="file"/>
+    <Asset name="level2Difficult" asset_type="directory"/>
+    <Asset name="Assets" path="level2Difficult" asset_type="directory"/>
+    <Asset name="level2Difficult-styles.css" path="level2Difficult/Assets" asset_type="file"/>
+    <Asset name="HTML_level2Difficult_v1.html" path="level2Difficult" asset_type="file"/>
+    <Asset name="HTML_level2Difficult_v2.html" path="level2Difficult" asset_type="file"/>
+    <Asset name="HTML_level2Difficult_v3.html" path="level2Difficult" asset_type="file"/>
+    <Asset name="HTML_level2Difficult_v4.html" path="level2Difficult" asset_type="file"/>
+    <Asset name="level2Difficult_v1.brd" path="level2Difficult" asset_type="file"/>
+    <Asset name="level2Difficult_v2.brd" path="level2Difficult" asset_type="file"/>
+    <Asset name="level2Difficult_v3.brd" path="level2Difficult" asset_type="file"/>
+    <Asset name="level2Difficult_v4.brd" path="level2Difficult" asset_type="file"/>
+    <Asset name="level2Easy" asset_type="directory"/>
+    <Asset name="Assets" path="level2Easy" asset_type="directory"/>
+    <Asset name="level2Easy-styles.css" path="level2Easy/Assets" asset_type="file"/>
+    <Asset name="HTML_level2Easy_v1.html" path="level2Easy" asset_type="file"/>
+    <Asset name="HTML_level2Easy_v2.html" path="level2Easy" asset_type="file"/>
+    <Asset name="HTML_level2Easy_v3.html" path="level2Easy" asset_type="file"/>
+    <Asset name="HTML_level2Easy_v4.html" path="level2Easy" asset_type="file"/>
+    <Asset name="HTML_level2Easy_v5.html" path="level2Easy" asset_type="file"/>
+    <Asset name="level2Easy_v1.brd" path="level2Easy" asset_type="file"/>
+    <Asset name="level2Easy_v2.brd" path="level2Easy" asset_type="file"/>
+    <Asset name="level2Easy_v3.brd" path="level2Easy" asset_type="file"/>
+    <Asset name="level2Easy_v4.brd" path="level2Easy" asset_type="file"/>
+    <Asset name="level2Easy_v5.brd" path="level2Easy" asset_type="file"/>
+    <Asset name="level2Medium" asset_type="directory"/>
+    <Asset name="Assets" path="level2Medium" asset_type="directory"/>
+    <Asset name="level2Medium-styles.css" path="level2Medium/Assets" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v1.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v10.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v2.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v3.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v4.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v5.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v6.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v7.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v8.html" path="level2Medium" asset_type="file"/>
+    <Asset name="HTML_level2Medium_v9.html" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v1.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v10.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v2.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v3.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v4.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v5.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v6.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v7.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v8.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level2Medium_v9.brd" path="level2Medium" asset_type="file"/>
+    <Asset name="level3Difficult" asset_type="directory"/>
+    <Asset name="Assets" path="level3Difficult" asset_type="directory"/>
+    <Asset name="level3Difficult-styles.css" path="level3Difficult/Assets" asset_type="file"/>
+    <Asset name="level3Easy" asset_type="directory"/>
+    <Asset name="Assets" path="level3Easy" asset_type="directory"/>
+    <Asset name="level3Easy-styles.css" path="level3Easy/Assets" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v1.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v10.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v2.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v3.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v4.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v5.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v6.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v7.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v8.html" path="level3Easy" asset_type="file"/>
+    <Asset name="HTML_level3Easy_v9.html" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v1.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v10.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v2.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v3.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v4.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v5.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v6.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v7.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v8.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Easy_v9.brd" path="level3Easy" asset_type="file"/>
+    <Asset name="level3Medium" asset_type="directory"/>
+    <Asset name="Assets" path="level3Medium" asset_type="directory"/>
+    <Asset name="level3Medium-styles.css" path="level3Medium/Assets" asset_type="file"/>
+    <Asset name="level3medium_variants.zip" path="level3Medium" asset_type="file"/>
+    <Asset name="v1_2x_4_minus_x_eq_10.brd" path="level3Medium" asset_type="file"/>
+    <Asset name="v1_2x_4_minus_x_eq_10.html" path="level3Medium" asset_type="file"/>
+    <Asset name="v2_3x_5_minus_2x_eq_9.brd" path="level3Medium" asset_type="file"/>
+    <Asset name="v2_3x_5_minus_2x_eq_9.html" path="level3Medium" asset_type="file"/>
+    <Asset name="v3_4x_3_minus_x_eq_16.brd" path="level3Medium" asset_type="file"/>
+    <Asset name="v3_4x_3_minus_x_eq_16.html" path="level3Medium" asset_type="file"/>
+    <Asset name="v4_2x_5_minus_3x_eq_22.brd" path="level3Medium" asset_type="file"/>
+    <Asset name="v4_2x_5_minus_3x_eq_22.html" path="level3Medium" asset_type="file"/>
+    <Asset name="v5_3x_4_minus_2x_eq_0.brd" path="level3Medium" asset_type="file"/>
+    <Asset name="v5_3x_4_minus_2x_eq_0.html" path="level3Medium" asset_type="file"/>
+  </Assets>
+</Package>

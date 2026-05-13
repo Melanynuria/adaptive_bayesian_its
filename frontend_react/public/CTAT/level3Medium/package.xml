@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package label="level3Medium" save_state="true">
+  <Problems>
+  </Problems>
+  <ProblemSets>
+    <ProblemSet name="Situation1" label="Situation1" status="active" image_height="0" filler_height="0" team_size="1" selection_algorithm="sequential" max_count="1000" max_repeat="1" initial_sequence="0">
+      <Problems>
+      </Problems>
+      <Skills>
+      </Skills>
+      <Categories>
+        <Collection name="general" label="Released Problem Sets" description="Released Problem Sets"/>
+        <Standard name="CommonCore" label="Common Core Standards" description="Common Core Standards" standard_level="standard"/>
+        <Standard name="NCTM" label="NCTM Curriculum Focal Points" description="NCTM Curriculum Focal Points" standard_level="standard"/>
+        <Standard name="PA" label="PA Assessment Anchors" description="PA Assessment Anchors" standard_level="standard"/>
+        <Standard name="Student" label="Problem Set Categories" description="Student Standards" standard_level="standard"/>
+      </Categories>
+    </ProblemSet>
+  </ProblemSets>
+  <Assets>
+    <Asset name="level3Medium_v1.brd" path="FinalBRDs"/>
+    <Asset name="level3Medium_v2.brd" path="FinalBRDs"/>
+    <Asset name="level3Medium_v3.brd" path="FinalBRDs"/>
+    <Asset name="level3Medium_v4.brd" path="FinalBRDs"/>
+    <Asset name="level3Medium_v5.brd" path="FinalBRDs"/>
+    <Asset name="HTML_level3Medium_v1.html" path="HTML"/>
+    <Asset name="HTML_level3Medium_v2.html" path="HTML"/>
+    <Asset name="HTML_level3Medium_v3.html" path="HTML"/>
+    <Asset name="HTML_level3Medium_v4.html" path="HTML"/>
+    <Asset name="HTML_level3Medium_v5.html" path="HTML"/>
+    <Asset name="level3Medium-styles.css" path="HTML/Assets"/>
+  </Assets>
+</Package>
