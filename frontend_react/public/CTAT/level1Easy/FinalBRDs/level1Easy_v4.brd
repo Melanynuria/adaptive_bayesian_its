@@ -186,7 +186,7 @@
                     </matcher>
                 </Action>
                 <Input>
-                    <matcher replacementFormula="x+ 8- 8">
+                    <matcher>
                         <matcherType>ExactMatcher</matcherType>
                         <matcherParameter name="single"><![CDATA[x+8-8]]></matcherParameter>
                     </matcher>

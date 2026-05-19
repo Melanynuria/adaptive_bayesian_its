@@ -1,0 +1,24 @@
+import { api } from "./client";
+
+type StudentProgress = {
+  student_id: string;
+  session_id: string;
+  problems: Record<string, { correct: number; incorrect: number }>;
+  total_correct: number;
+  total_incorrect: number;
+  assigned_to: string | null;
+  hand_raised: boolean;
+  knowledge_states: Record<string, number>;
+};
+
+/** Teacher: initialise a new class session (creates the per-class SQLite database). */
+export async function startClass(class_code: string) {
+  const res = await api.post(`/api/classroom/${class_code}/start`);
+  return res.data as { status: string; class_code: string };
+}
+
+/** Teacher: fetch the live attempt summary for all students in the class. */
+export async function getProgress(class_code: string) {
+  const res = await api.get(`/api/classroom/${class_code}/progress`);
+  return res.data as { students: StudentProgress[] };
+}

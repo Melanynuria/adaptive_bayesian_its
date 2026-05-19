@@ -860,7 +860,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>fb13d6b5-aa5f-2a97-8c3e-d877592b8a71</transaction_id><Selection><value>l-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[4x+1+2x]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Mou els termes de la x a l'esquerra i els nombres a la dreta. ]]></hintMessage>
+            <hintMessage><![CDATA[Mou el terme -2x al costat esquerre sumant 2x als dos costats.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -905,7 +905,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>e8c92db4-bef7-b785-4c0a-035f105dd4fa</transaction_id><Selection><value>r-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[13]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Mou els termes de la x a l'esquerra i els nombres a la dreta. ]]></hintMessage>
+            <hintMessage><![CDATA[Mou el terme -2x al costat esquerre sumant 2x als dos costats.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -950,7 +950,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>fc1d1f88-e312-02c8-b82f-cae77a988f2c</transaction_id><Selection><value>l-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[6x+1]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Combina els termes de la x.]]></hintMessage>
+            <hintMessage><![CDATA[Combina els termes amb x: 4x + 2x.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -1040,7 +1040,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>4ff8c409-32c7-03c5-943e-dca68eed34b2</transaction_id><Selection><value>l-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[6x]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Mou la constant.]]></hintMessage>
+            <hintMessage><![CDATA[Mou el nombre 1 al costat dret restant 1 als dos costats.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -1085,7 +1085,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>4c0a9046-93f0-1401-1d69-2b2ebae269b3</transaction_id><Selection><value>r-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[13-1]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Mou la constant.]]></hintMessage>
+            <hintMessage><![CDATA[Mou el nombre 1 al costat dret restant 1 als dos costats.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -1175,7 +1175,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>2977e63c-365a-0dc0-a1f2-ecd1df204da9</transaction_id><Selection><value>r-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Simplifica.]]></hintMessage>
+            <hintMessage><![CDATA[Simplifica 13 menys 1.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -1220,7 +1220,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>cba30ade-d932-28d4-879e-7af56efd47c2</transaction_id><Selection><value>l-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Ara elimina el coeficient de la x.]]></hintMessage>
+            <hintMessage><![CDATA[Divideix els dos costats entre 6 per eliminar el coeficient de la x.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -1265,7 +1265,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>6acb1155-2c79-e1a5-ba17-4e18eb38aa1a</transaction_id><Selection><value>r-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12/6]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Ara elimina el coeficient de la x.]]></hintMessage>
+            <hintMessage><![CDATA[Divideix els dos costats entre 6 per eliminar el coeficient de la x.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -1355,7 +1355,7 @@
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>2a93d46c-05ce-c95d-004a-5c5bf55f2b32</transaction_id><Selection><value>r-7</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[2]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "2" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Simplifica 12 dividit entre 6.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -1384,7 +1384,7 @@
         </actionLabel>
         <preCheckedStatus>No-Applicable</preCheckedStatus>
         <rule>
-            <text>unnamed</text>
+            <text><![CDATA[simplification simplification]]></text>
             <indicator>-1</indicator>
         </rule>
         <sourceID>23</sourceID>
@@ -2319,6 +2319,1233 @@
         <label><![CDATA[remove_coefficient]]></label>
         <description><![CDATA[remove_coefficient remove_coefficient]]></description>
     </productionRule>
+    <node locked="false" doneState="true">
+        <text>state45</text>
+        <uniqueID>45</uniqueID>
+        <dimension>
+            <x>17</x>
+            <y>2285</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state46</text>
+        <uniqueID>46</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>185</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state47</text>
+        <uniqueID>47</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>335</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state48</text>
+        <uniqueID>48</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>485</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state49</text>
+        <uniqueID>49</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>635</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state50</text>
+        <uniqueID>50</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>785</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state51</text>
+        <uniqueID>51</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>935</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state52</text>
+        <uniqueID>52</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>1085</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state53</text>
+        <uniqueID>53</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>1235</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state54</text>
+        <uniqueID>54</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>1385</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state55</text>
+        <uniqueID>55</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>1535</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state56</text>
+        <uniqueID>56</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>1685</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state57</text>
+        <uniqueID>57</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>1835</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="true">
+        <text>state58</text>
+        <uniqueID>58</uniqueID>
+        <dimension>
+            <x>317</x>
+            <y>1985</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state59</text>
+        <uniqueID>59</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>485</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state60</text>
+        <uniqueID>60</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>635</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state61</text>
+        <uniqueID>61</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>785</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state62</text>
+        <uniqueID>62</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>935</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state63</text>
+        <uniqueID>63</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>1085</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state64</text>
+        <uniqueID>64</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>1235</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state65</text>
+        <uniqueID>65</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>1385</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="false">
+        <text>state66</text>
+        <uniqueID>66</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>1535</y>
+        </dimension>
+    </node>
+    <node locked="false" doneState="true">
+        <text>state67</text>
+        <uniqueID>67</uniqueID>
+        <dimension>
+            <x>517</x>
+            <y>1685</y>
+        </dimension>
+    </node>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>44</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>44000000-0000-0000-0000-000000000003</transaction_id><Selection><value>done</value></Selection><Action><value>ButtonPressed</value></Action><Input><value><![CDATA[-1]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Prem el botó de finalització.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[done]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[ButtonPressed]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[-1]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text>unnamed</text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>24</sourceID>
+        <destID>45</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="false" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>45</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>45000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[4x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Mou el nombre 1 al costat dret restant 1 als dos costats.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-2]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[4x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[move_constants move_constants]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>3</sourceID>
+        <destID>46</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>46</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>46000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[13-2x-1]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Mou el nombre 1 al costat dret restant 1 als dos costats.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-2]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[13-2x-1]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[move_constants move_constants]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>46</sourceID>
+        <destID>47</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>47</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>47000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[4x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Res a fer aquí.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-3]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[4x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text>unnamed</text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>47</sourceID>
+        <destID>48</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>48</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>48000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12-2x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Simplifica 13 menys 1.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-3]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[12-2x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[simplification simplification]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>48</sourceID>
+        <destID>49</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>49</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>49000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[4x+2x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Mou el terme -2x al costat esquerre sumant 2x als dos costats.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-4]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[4x+2x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[combine_like_terms combine_like_terms]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>49</sourceID>
+        <destID>50</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>50</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>50000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Mou el terme -2x al costat esquerre sumant 2x als dos costats.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-4]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[12]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[combine_like_terms combine_like_terms]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>50</sourceID>
+        <destID>51</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>51</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>51000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[6x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Combina 4x i 2x.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-5]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[6x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[combine_like_terms combine_like_terms]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>51</sourceID>
+        <destID>52</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>52</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>52000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Res a fer aquí.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-5]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[12]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text>unnamed</text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>52</sourceID>
+        <destID>53</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>53</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>53000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Divideix els dos costats entre 6 per aïllar la x.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-6]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[remove_coefficient remove_coefficient]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>53</sourceID>
+        <destID>54</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>54</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>54000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12/6]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Divideix els dos costats entre 6 per aïllar la x.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-6]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[12/6]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[remove_coefficient remove_coefficient]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>54</sourceID>
+        <destID>55</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>55</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>55000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-7</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Res a fer aquí.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-7]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text>unnamed</text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>55</sourceID>
+        <destID>56</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>56</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>56000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-7</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[2]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Simplifica 12 dividit entre 6.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-7]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[2]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[simplification simplification]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>56</sourceID>
+        <destID>57</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>57</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>57000000-0000-0000-0000-000000000003</transaction_id><Selection><value>done</value></Selection><Action><value>ButtonPressed</value></Action><Input><value><![CDATA[-1]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Prem el botó de finalització.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[done]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[ButtonPressed]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[-1]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text>unnamed</text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>57</sourceID>
+        <destID>58</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="false" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>58</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>58000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[4x+2x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Mou el terme -2x al costat esquerre.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-3]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[4x+2x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[combine_like_terms combine_like_terms]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>47</sourceID>
+        <destID>59</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>59</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>59000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[13-1]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Mou el terme -2x al costat esquerre.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-3]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[13-1]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[combine_like_terms combine_like_terms]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>59</sourceID>
+        <destID>60</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>60</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>60000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[6x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Combina els termes amb x i simplifica els nombres.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-4]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[6x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[combine_like_terms combine_like_terms]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <rule>
+            <text><![CDATA[simplification simplification]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>60</sourceID>
+        <destID>61</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>61</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>61000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Combina els termes amb x i simplifica els nombres.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-4]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[12]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[combine_like_terms combine_like_terms]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <rule>
+            <text><![CDATA[simplification simplification]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>61</sourceID>
+        <destID>62</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>62</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>62000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Divideix els dos costats entre 6.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-5]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[remove_coefficient remove_coefficient]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>62</sourceID>
+        <destID>63</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>63</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>63000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12/6]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Divideix els dos costats entre 6.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-5]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[12/6]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[remove_coefficient remove_coefficient]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>63</sourceID>
+        <destID>64</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>64</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>64000000-0000-0000-0000-000000000003</transaction_id><Selection><value>l-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Res a fer aquí.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[l-6]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[x]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text>unnamed</text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>64</sourceID>
+        <destID>65</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>65</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>65000000-0000-0000-0000-000000000003</transaction_id><Selection><value>r-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[2]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Simplifica 12 dividit entre 6.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[r-6]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[UpdateTextField]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[2]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text><![CDATA[simplification simplification]]></text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>65</sourceID>
+        <destID>66</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
+    <edge>
+        <actionLabel preferPathMark="true" minTraversals="1" maxTraversals="1">
+            <studentHintRequest></studentHintRequest>
+            <stepSuccessfulCompletion></stepSuccessfulCompletion>
+            <stepStudentError></stepStudentError>
+            <uniqueID>66</uniqueID>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>66000000-0000-0000-0000-000000000003</transaction_id><Selection><value>done</value></Selection><Action><value>ButtonPressed</value></Action><Input><value><![CDATA[-1]]></value></Input></properties></message>
+            <buggyMessage></buggyMessage>
+            <successMessage></successMessage>
+            <hintMessage><![CDATA[Prem el botó de finalització.]]></hintMessage>
+            <callbackFn></callbackFn>
+            <actionType>Correct Action</actionType>
+            <oldActionType>Correct Action</oldActionType>
+            <checkedStatus>Never Checked</checkedStatus>
+            <matchers Concatenation="true">
+                <Selection>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[done]]></matcherParameter>
+                    </matcher>
+                </Selection>
+                <Action>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[ButtonPressed]]></matcherParameter>
+                    </matcher>
+                </Action>
+                <Input>
+                    <matcher>
+                        <matcherType>ExactMatcher</matcherType>
+                        <matcherParameter name="single"><![CDATA[-1]]></matcherParameter>
+                    </matcher>
+                </Input>
+                <Actor linkTriggered="false">Student</Actor>
+            </matchers>
+        </actionLabel>
+        <preCheckedStatus>No-Applicable</preCheckedStatus>
+        <rule>
+            <text>unnamed</text>
+            <indicator>-1</indicator>
+        </rule>
+        <sourceID>66</sourceID>
+        <destID>67</destID>
+        <traversalCount>0</traversalCount>
+    </edge>
     <EdgesGroups ordered="false">
     </EdgesGroups>
 </stateGraph>

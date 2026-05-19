@@ -138,10 +138,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>1</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>5d496ee3-0ae1-8193-0446-f00398859507</transaction_id><Selection><value>l-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[3(2-x)]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>5d496ee3-0ae1-8193-0446-f00398859507</transaction_id><Selection><value>l-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[2(3-2x)]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "3(2-x)" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "2(3-2x)" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -162,7 +162,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[3(2-x)]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[2(3-2x)]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Tutor (unevaluated)</Actor>

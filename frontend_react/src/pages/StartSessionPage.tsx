@@ -1,34 +1,52 @@
-import { useState } from "react"; // Returns a stateful value, and a function to update it.
-import { useNavigate } from "react-router-dom"; // clien-side navigation
-import { startSession } from "../api/sessionApi"; //Api helper function
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { startSession } from "../api/sessionApi";
 
-export default function StartSessionPage() {  //Exported as default to be used in routing 
+export default function StartSessionPage() {
   const nav = useNavigate();
-  const [classCode, setClassCode] = useState(""); 
+  const [classCode, setClassCode] = useState("");
   const [studentId, setStudentId] = useState("");
-  const [error, setError] = useState<string | null>(null); //will store an error message if needed 
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   async function onStart() {
-    setError(null); // Reset previous errors
+    setError(null);
     const cc = classCode.trim();
-    if (!cc) return setError("Class code is required.");
+    if (!cc) return setError("El codi de classe és obligatori.");
 
-    try { 
+    setLoading(true);
+    try {
       const sid = studentId.trim() || crypto.randomUUID();
-      const data = await startSession(cc, sid); // call the backend and wait for the response 
-      // pass the data to the tutor page
-      nav("/tutor", { state: { sessionId: data.session_id, firstProblemId: data.first_problem_id } });
-    } 
-    catch {
-      setError("Could not start session. Is FastAPI running?");
+      const data = await startSession(cc, sid);
+      nav("/tutor", {
+        state: {
+          sessionId: data.session_id,
+          problemIds: data.problem_ids,
+          classCode: cc,
+        },
+      });
+    } catch (err: unknown) {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail;
+      setError(detail ?? "No s'ha pogut iniciar la sessió. Comprova que FastAPI està en marxa.");
+    } finally {
+      setLoading(false);
     }
-    }
+  }
+
   return (
-    <div 
+    <div
       style={{
-        height: "100vh", width: "100vw", display: "flex",alignItems: "center", justifyContent: "center", fontFamily: "Verdana", backgroundColor: "#bcbcbc"
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "Verdana",
+        backgroundColor: "#bcbcbc",
       }}
-    > 
+    >
       <div
         style={{
           width: 620,
@@ -37,7 +55,6 @@ export default function StartSessionPage() {  //Exported as default to be used i
           borderRadius: 10,
           boxShadow: "0 0px 70px rgba(255, 255, 255, 0.08)",
           backgroundColor: "#ffffff",
-
         }}
       >
         <h2 style={{ textAlign: "center", marginBottom: 24 }}>
@@ -61,22 +78,23 @@ export default function StartSessionPage() {  //Exported as default to be used i
         />
 
         {error && (
-          <p style={{ color: "crimson", marginBottom: 16 }}>
-            {error}
-          </p>
+          <p style={{ color: "crimson", marginBottom: 16 }}>{error}</p>
         )}
 
         <button
           onClick={onStart}
+          disabled={loading}
           style={{
             width: "100%",
             padding: "12px 16px",
             marginTop: 8,
-            cursor: "pointer",
+            cursor: loading ? "not-allowed" : "pointer",
+            opacity: loading ? 0.7 : 1,
           }}
         >
-          Start
+          {loading ? "Carregant…" : "Iniciar"}
         </button>
       </div>
     </div>
-  );}
+  );
+}

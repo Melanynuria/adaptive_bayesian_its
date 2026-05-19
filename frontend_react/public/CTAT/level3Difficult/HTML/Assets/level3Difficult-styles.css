@@ -148,7 +148,18 @@
     align-items: center;
     justify-content: center;
 }
-
+#ixpeka {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+#ia8cg {
+    width: 35%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
 #l-6 {
     justify-content: center;
     width: 90%;
@@ -168,7 +179,54 @@
     align-content: center;
 }
 
+#ik4z55 {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+
+#iz7h59 {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+
+#iwpws {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+
+#idak3 {
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
 #idr32 {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#i8d35d {
+    text-align: center;
+    font-family: Georgia, serif;
+    font-weight: 500;
+    font-size: 200%;
+    width: 44px;
+}
+
+#i8dth {
     text-align: center;
     font-family: Georgia, serif;
     font-weight: 500;
@@ -189,6 +247,18 @@
     text-align: center;
     width: 5%;
 }
+#ipi9hs {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 5%;
+}
+#i4bsj {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 5%;
+}
 
 #ihd0k {
     justify-content: center;
@@ -203,6 +273,32 @@
 }
 
 #pas4 {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+    float: left;
+}
+#pas6 {
+    height: 80%;
+    font-weight: 400;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-align: center;
+    color: #595959;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    font-size: 100%;
+    width: 90%;
+    float: left;
+}
+#pas7 {
     height: 80%;
     font-weight: 400;
     font-family: Tahoma, Geneva, sans-serif;
@@ -562,6 +658,30 @@
     text-align: center;
     background-color: #ffffff;
 }
+#l-8 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#r-8 {
+    justify-content: center;
+    width: 90%;
+    height: 80%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 120%;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    background-color: #ffffff;
+}
+
 #l-7 {
     justify-content: center;
     width: 90%;
@@ -575,28 +695,6 @@
 }
 
 #r-7 {
-    justify-content: center;
-    width: 90%;
-    height: 80%;
-    font-family: Tahoma, Geneva, sans-serif;
-    font-size: 120%;
-    font-weight: 400;
-    color: #000000;
-    text-align: center;
-    background-color: #ffffff;
-}#l-8 {
-    justify-content: center;
-    width: 90%;
-    height: 80%;
-    font-family: Tahoma, Geneva, sans-serif;
-    font-size: 120%;
-    font-weight: 400;
-    color: #000000;
-    text-align: center;
-    background-color: #ffffff;
-}
-
-#r-8 {
     justify-content: center;
     width: 90%;
     height: 80%;

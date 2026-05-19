@@ -186,7 +186,7 @@
                     </matcher>
                 </Action>
                 <Input>
-                    <matcher replacementFormula="2x/ 2">
+                    <matcher>
                         <matcherType>ExactMatcher</matcherType>
                         <matcherParameter name="single"><![CDATA[2x/2]]></matcherParameter>
                     </matcher>

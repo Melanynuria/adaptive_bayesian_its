@@ -5,6 +5,12 @@
             "driver": "SQLite",
             "name": "tfg",
             "database": "backend_fastAPI/app/data/app.db"
+        },
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "backend_fastAPI/app/data/19h53_14-05-2026_AA.db",
+            "name": "TFG"
         }
     ],
     "sqltools.useNodeRuntime": true

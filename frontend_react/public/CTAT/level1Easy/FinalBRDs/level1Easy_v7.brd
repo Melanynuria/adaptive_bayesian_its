@@ -186,7 +186,7 @@
                     </matcher>
                 </Action>
                 <Input>
-                    <matcher replacementFormula="4x/ 4">
+                    <matcher>
                         <matcherType>ExactMatcher</matcherType>
                         <matcherParameter name="single"><![CDATA[4x/4]]></matcherParameter>
                     </matcher>

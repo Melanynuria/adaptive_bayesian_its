@@ -74,10 +74,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>1</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>4479555b-2ac9-db86-f13b-733d78a00613</transaction_id><Selection><value>l-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[5x]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>4479555b-2ac9-db86-f13b-733d78a00613</transaction_id><Selection><value>l-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x+5]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "5x" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "x+5" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -98,7 +98,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[5x]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[x+5]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Tutor (unevaluated)</Actor>
@@ -119,10 +119,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>2</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>d9dc35eb-7827-4a52-88f3-b96b7beb94f4</transaction_id><Selection><value>r-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[25]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>d9dc35eb-7827-4a52-88f3-b96b7beb94f4</transaction_id><Selection><value>r-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[13]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "25" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "13" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -143,7 +143,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[25]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[13]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Tutor (unevaluated)</Actor>
@@ -164,10 +164,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>3</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>50b52624-fb3b-0caa-07d0-6eae6b408073</transaction_id><Selection><value>l-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[5x/5]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>50b52624-fb3b-0caa-07d0-6eae6b408073</transaction_id><Selection><value>l-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x+5-5]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[El 5 multiplica la x. Per deixar la x sola, divideix entre 5 als dos costats.]]></hintMessage>
+            <hintMessage><![CDATA[El 5 està sumant. Per deixar la x sola, resta 5 als dos costats.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -188,7 +188,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[5x/5]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[x+5-5]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -196,7 +196,7 @@
         </actionLabel>
         <preCheckedStatus>No-Applicable</preCheckedStatus>
         <rule>
-            <text><![CDATA[remove_coefficient remove_coefficient]]></text>
+            <text><![CDATA[move_constants move_constants]]></text>
             <indicator>-1</indicator>
         </rule>
         <sourceID>3</sourceID>
@@ -209,10 +209,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>4</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>f5e5b6f4-0e33-6112-856c-20a2dc4fe924</transaction_id><Selection><value>r-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[25/5]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>f5e5b6f4-0e33-6112-856c-20a2dc4fe924</transaction_id><Selection><value>r-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[13-5]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[El 5 multiplica la x. Per deixar la x sola, divideix entre 5 als dos costats.]]></hintMessage>
+            <hintMessage><![CDATA[El 5 està sumant. Per deixar la x sola, resta 5 als dos costats.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -233,7 +233,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[25/5]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[13-5]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -241,7 +241,7 @@
         </actionLabel>
         <preCheckedStatus>No-Applicable</preCheckedStatus>
         <rule>
-            <text><![CDATA[remove_coefficient remove_coefficient]]></text>
+            <text><![CDATA[move_constants move_constants]]></text>
             <indicator>-1</indicator>
         </rule>
         <sourceID>4</sourceID>
@@ -299,7 +299,7 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>6</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>47649bf0-e5c3-b520-a788-2a402c705ce2</transaction_id><Selection><value>r-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[5]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>47649bf0-e5c3-b520-a788-2a402c705ce2</transaction_id><Selection><value>r-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[8]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
             <hintMessage><![CDATA[Ara simplifica els dos costats després de l’operació anterior.]]></hintMessage>
@@ -323,7 +323,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[5]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[8]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -384,10 +384,10 @@
         <traversalCount>0</traversalCount>
     </edge>
     <productionRule opportunities="2">
-        <ruleName><![CDATA[remove_coefficient]]></ruleName>
-        <productionSet><![CDATA[remove_coefficient]]></productionSet>
-        <label><![CDATA[remove_coefficient]]></label>
-        <description><![CDATA[remove_coefficient remove_coefficient]]></description>
+        <ruleName><![CDATA[move_constants]]></ruleName>
+        <productionSet><![CDATA[move_constants]]></productionSet>
+        <label><![CDATA[move_constants]]></label>
+        <description><![CDATA[move_constants move_constants]]></description>
     </productionRule>
     <productionRule opportunities="2">
         <ruleName><![CDATA[simplification]]></ruleName>
