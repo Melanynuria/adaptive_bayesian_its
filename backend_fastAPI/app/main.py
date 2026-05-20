@@ -28,13 +28,32 @@ app.add_middleware(
 # PATHS
 # -----------------------------------
 
-BASE_DIR    = Path(__file__).resolve().parent
-DATA_DIR    = BASE_DIR / "data"
+BASE_DIR     = Path(__file__).resolve().parent
+DATA_DIR     = BASE_DIR / "data"
+CLASSES_DIR  = DATA_DIR / "classes"
 DATA_DIR.mkdir(exist_ok=True)
+CLASSES_DIR.mkdir(exist_ok=True)
 
 REGISTRY_DB  = DATA_DIR / "app.db"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CTAT_DIR     = PROJECT_ROOT / "frontend_react" / "public" / "CTAT"
+
+# DDL shared by all databases that store step-level interactions.
+_STEPS_DDL = """
+    CREATE TABLE IF NOT EXISTS steps (
+        session_id    TEXT,
+        class_code    TEXT,
+        problem_id    TEXT,
+        step_name     TEXT,
+        kc            TEXT,
+        hint_per_step INTEGER,
+        selection     TEXT,
+        action        TEXT,
+        input         TEXT,
+        correctness   TEXT,
+        timestamp     TEXT
+    );
+"""
 
 # -----------------------------------
 # BKT PARAMETERS  (inferred from dataset analysis)
@@ -284,16 +303,16 @@ def bkt_update(p_l: float, correct: bool, params: Dict[str, float]) -> float:
     p_lrn = params["p_l"]
 
     if correct:
-        num = p_l * (1.0 - p_s)
-        den = num + (1.0 - p_l) * p_g
+        num = p_l * (1.0 - p_s) # probability of knew it and didn't slip 
+        den = num + (1.0 - p_l) * p_g # probability of didn't know it but guessed it right. 
     else:
-        num = p_l * p_s
-        den = num + (1.0 - p_l) * (1.0 - p_g)
+        num = p_l * p_s         # probabilitiy of know it but slipped 
+        den = num + (1.0 - p_l) * (1.0 - p_g) # probability of didn't know it and didn't guess right 
 
     p_post = num / den if den > 0 else p_l
     # Apply learn/forget transition: even a student who knows may forget,
     # and one who does not may spontaneously learn.
-    return p_post * (1.0 - p_f) + (1.0 - p_post) * p_lrn
+    return p_post * (1.0 - p_f) + (1.0 - p_post) * p_lrn # knew it and keep it + didn't know it but learned it
 
 
 def compute_knowledge_states(session_id: str, db_path: Path) -> Dict[str, float]:
@@ -483,7 +502,8 @@ def generate_student_report(
     thin   = Border(**{s: Side(style="thin") for s in ("left", "right", "top", "bottom")})
 
     safe_name   = re.sub(r"[^\w\-]", "_", student_id)
-    report_path = DATA_DIR / f"student_{safe_name}_{class_code}.xlsx"
+    # db_path is the main class DB; Excel goes in the students/ subfolder beside it
+    report_path = db_path.parent / "students" / f"student_{safe_name}_{class_code}.xlsx"
 
     def _style_data_cell(cell, header: str, row_idx: int) -> None:
         cell.border    = thin
@@ -683,7 +703,8 @@ def generate_class_report(class_code: str, db_path: Path) -> Optional[Path]:
         ws.column_dimensions[col_cells[0].column_letter].width = max(14, width + 2)
 
     ts_str = datetime.now().strftime("%Hh%M_%d-%m-%Y")
-    report_path = DATA_DIR / f"report_{ts_str}_{class_code}.xlsx"
+    # db_path is the main class DB; class report goes in the same folder
+    report_path = db_path.parent / f"report_{ts_str}_{class_code}.xlsx"
     wb.save(report_path)
     print(f"[REPORT] Saved → {report_path.name}")
     return report_path
@@ -713,18 +734,36 @@ def init_registry():
     print(f"Registry DB ready: {REGISTRY_DB}")
 
 
+def _init_steps_db(path: Path) -> None:
+    """Create a lightweight DB that only holds the steps table."""
+    conn = sqlite3.connect(path, timeout=10)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA busy_timeout=5000")
+    conn.executescript(_STEPS_DDL)
+    conn.commit()
+    conn.close()
+
+
 def create_class_db(class_code: str) -> Path:
     """
-    Create a fresh per-class SQLite database with all required tables.
+    Build the full folder structure for one class session and return the main DB path.
 
-    A new file is created each time the teacher starts a class session, so data
-    from different class sessions is never mixed. WAL mode is enabled to allow
-    concurrent reads while writes are in progress.
+    Layout inside CLASSES_DIR:
+        {class_code}_{HHhMM_DD-MM-YYYY}/
+            {class_code}_{HHhMM_DD-MM-YYYY}.db   ← main class DB
+            first_analysis.db                     ← diagnostic steps (all students)
+            final_analysis.db                     ← final-assessment steps (all students)
+            students/                             ← one DB per student, created on join
     """
     ts = datetime.now()
-    filename = f"{class_code}_"+ts.strftime("%Hh%M_%d-%m-%Y") + f".db"
-    db_path = DATA_DIR / filename
+    folder_name = f"{class_code}_{ts.strftime('%Hh%M_%d-%m-%Y')}"
+    class_folder = CLASSES_DIR / folder_name
+    class_folder.mkdir(parents=True, exist_ok=True)
+    (class_folder / "students").mkdir(exist_ok=True)
 
+    db_path = class_folder / f"{folder_name}.db"
+
+    # Main class DB — sessions + steps + assignments
     conn = sqlite3.connect(db_path, timeout=10)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA busy_timeout=5000")
@@ -737,19 +776,6 @@ def create_class_db(class_code: str) -> Path:
             hand_raised        INTEGER NOT NULL DEFAULT 0,
             completed_problems TEXT    NOT NULL DEFAULT '[]'
         );
-        CREATE TABLE IF NOT EXISTS steps (
-            session_id    TEXT,
-            class_code    TEXT,
-            problem_id    TEXT,
-            step_name     TEXT,
-            kc            TEXT,
-            hint_per_step INTEGER,
-            selection     TEXT,
-            action        TEXT,
-            input         TEXT,
-            correctness   TEXT,
-            timestamp     TEXT
-        );
         CREATE TABLE IF NOT EXISTS assignments (
             session_id   TEXT PRIMARY KEY,
             class_code   TEXT,
@@ -758,10 +784,15 @@ def create_class_db(class_code: str) -> Path:
             problem_ids  TEXT,
             assigned_at  TEXT
         );
-    """)
+    """ + _STEPS_DDL)
     conn.commit()
     conn.close()
-    print(f"Class DB created: {db_path.name}")
+
+    # Analysis DBs — steps only
+    _init_steps_db(class_folder / "first_analysis.db")
+    _init_steps_db(class_folder / "final_analysis.db")
+
+    print(f"[CLASS DB] folder={folder_name}")
     return db_path
 
 
@@ -869,13 +900,20 @@ def start_session(req: StartSessionRequest):
         )
 
     db_path    = ACTIVE_CLASSES[req.class_code]
+    class_folder = db_path.parent
     session_id = str(uuid.uuid4())
 
+    # Per-student DB lives in students/ beside the main class DB
+    safe_sid = re.sub(r"[^\w\-]", "_", req.student_id)
+    student_db_path = class_folder / "students" / f"{safe_sid}.db"
+    _init_steps_db(student_db_path)
+
     SESSIONS[session_id] = {
-        "class_code": req.class_code,
-        "student_id": req.student_id,
-        "db_path":    str(db_path),
-        "hints_seen": {},   # problem_id → set of selections that had a hint
+        "class_code":      req.class_code,
+        "student_id":      req.student_id,
+        "db_path":         str(db_path),
+        "student_db_path": str(student_db_path),
+        "hints_seen":      {},   # problem_id → set of selections that had a hint
     }
 
     conn = sqlite3.connect(db_path, timeout=10)
@@ -886,15 +924,17 @@ def start_session(req: StartSessionRequest):
     conn.commit()
     conn.close()
 
+    # Store path relative to DATA_DIR so the registry works regardless of working directory
+    rel_path = str(db_path.relative_to(DATA_DIR))
     conn = sqlite3.connect(REGISTRY_DB)
     conn.execute(
         "INSERT OR REPLACE INTO session_registry (session_id, class_code, db_file) VALUES (?, ?, ?)",
-        (session_id, req.class_code, db_path.name),
+        (session_id, req.class_code, rel_path),
     )
     conn.commit()
     conn.close()
 
-    print(f"[SESSION] class={req.class_code}  student={req.student_id}  db={db_path.name}")
+    print(f"[SESSION] class={req.class_code}  student={req.student_id}  folder={class_folder.name}")
     return {
         "session_id": session_id,
         "problem_ids": ["level1Difficult_v1", "level2Difficult_v1", "level3Difficult_v1"],
@@ -924,8 +964,14 @@ async def logs(req: LogsRequest):
     session_meta = SESSIONS.get(req.session_id, {})
     hints_seen: Dict[str, set] = session_meta.get("hints_seen", {})
 
-    conn   = sqlite3.connect(db_path, timeout=10)
-    cursor = conn.cursor()
+    class_folder = db_path.parent
+    student_db_path = Path(session_meta["student_db_path"]) if session_meta.get("student_db_path") else None
+
+    conn        = sqlite3.connect(db_path, timeout=10)
+    cursor      = conn.cursor()
+    student_conn = sqlite3.connect(student_db_path, timeout=10) if student_db_path else None
+    first_conn   = sqlite3.connect(class_folder / "first_analysis.db", timeout=10)
+    final_conn   = sqlite3.connect(class_folder / "final_analysis.db", timeout=10)
 
     print(f"\n[LOGS] {len(req.events)} event(s)  session={req.session_id[:8]}  class={class_code}")
 
@@ -1009,16 +1055,27 @@ async def logs(req: LogsRequest):
                 f"  kc={kc}  hint={bool(hint_per_step)}  input={p.get('input')!r}"
                 f"  → {correctness or 'n/a'}"
             )
-            cursor.execute("""
+            _step_row = (
+                req.session_id, class_code, problem_id,
+                selection, kc, hint_per_step,
+                selection, p.get("action"), p.get("input"), correctness, e.get("ts"),
+            )
+            _step_sql = """
                 INSERT INTO steps
                     (session_id, class_code, problem_id, step_name,
                      kc, hint_per_step, selection, action, input, correctness, timestamp)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                req.session_id, class_code, problem_id,
-                selection, kc, hint_per_step,
-                selection, p.get("action"), p.get("input"), correctness, e.get("ts"),
-            ))
+            """
+            # Main class DB
+            cursor.execute(_step_sql, _step_row)
+            # Per-student DB
+            if student_conn:
+                student_conn.execute(_step_sql, _step_row)
+            # Analysis DBs
+            if problem_id in DIAGNOSTIC_EXERCISES:
+                first_conn.execute(_step_sql, _step_row)
+            if problem_id in FINAL_EXERCISES:
+                final_conn.execute(_step_sql, _step_row)
 
         # ── Tutor evaluation (RESULT / TUTOR_MSG) — inherit hint flag, no store
         elif kc:
@@ -1030,6 +1087,10 @@ async def logs(req: LogsRequest):
             )
 
     conn.commit()
+    if student_conn:
+        student_conn.commit()
+    first_conn.commit()
+    final_conn.commit()
 
     # ── Trigger BKT + new assignment after every completed exercise round ────
     if trigger_report:
@@ -1044,6 +1105,9 @@ async def logs(req: LogsRequest):
         if n_done == N_FIRST_EXERCISES:
             # Diagnostic round done → first BKT run, phase-1 report
             conn.close()
+            if student_conn: student_conn.close()
+            first_conn.close()
+            final_conn.close()
             loop = asyncio.get_running_loop()
             loop.run_in_executor(
                 None, process_completed_session,
@@ -1071,6 +1135,9 @@ async def logs(req: LogsRequest):
                     )
                     conn.commit()
                     conn.close()
+                    if student_conn: student_conn.close()
+                    first_conn.close()
+                    final_conn.close()
 
                     # report_phase 2+ means "append row to existing file"
                     rounds_done = len(personalized_done) // N_ASSIGNED
@@ -1085,6 +1152,9 @@ async def logs(req: LogsRequest):
                     return {"status": "saved", "next_round_triggered": True}
 
     conn.close()
+    if student_conn: student_conn.close()
+    first_conn.close()
+    final_conn.close()
     return {"status": "saved"}
 
 
@@ -1264,7 +1334,10 @@ def classroom_progress(class_code: str):
 @app.get("/api/classroom/{class_code}/report")
 def download_report(class_code: str):
     """Return the most recently generated Excel report for the class as a file download."""
-    reports = sorted(DATA_DIR.glob(f"report_*_{class_code}.xlsx"))
+    db_path = ACTIVE_CLASSES.get(class_code)
+    if db_path is None:
+        raise HTTPException(status_code=404, detail="Class not active.")
+    reports = sorted(db_path.parent.glob(f"report_*_{class_code}.xlsx"))
     if not reports:
         raise HTTPException(status_code=404, detail="No report generated yet for this class.")
     latest = reports[-1]
