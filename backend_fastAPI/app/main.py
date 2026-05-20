@@ -62,15 +62,24 @@ BKT_PARAMS: Dict[str, Dict[str, float]] = {
 # ADAPTIVE EXERCISE SELECTION
 # -----------------------------------
 
-STRUGGLE_THRESHOLD = 0.40   # below → Easy
+STRUGGLE_THRESHOLD = 0.40   # below → remedial + Easy
 MASTERY_THRESHOLD  = 0.80   # above → level mastered, try next
-N_ASSIGNED         = 5      # exercises per personalized set
+N_ASSIGNED         = 4      # regular exercises per personalized round
+N_REMEDIAL         = 2      # Easy exercises prepended when any KC P(L) < STRUGGLE_THRESHOLD
+# Total per round: N_REMEDIAL + N_ASSIGNED = 6 when remediation applies, N_ASSIGNED = 4 otherwise
 
 # KCs used to evaluate mastery of each level (simplification excluded — no BKT params)
 LEVEL_KC_GROUPS: Dict[str, List[str]] = {
     "level1": ["move_constants", "remove_coefficient"],
-    "level2": ["combine_like_terms"],
-    "level3": ["expand_eliminate_parentheses", "normalize_negative_sign"],
+    "level2": ["combine_like_terms","normalize_negative_sign"],
+    "level3": ["expand_eliminate_parentheses"],
+}
+
+# Reverse mapping: kc_name → level (derived from LEVEL_KC_GROUPS)
+KC_TO_LEVEL: Dict[str, str] = {
+    kc: level
+    for level, kcs in LEVEL_KC_GROUPS.items()
+    for kc in kcs
 }
 
 # Exercises already used in the diagnostic phase — never reassigned
@@ -117,6 +126,9 @@ EXERCISE_POOL: Dict[Tuple[str, str], List[str]] = _build_exercise_pool()
 KC_VERSION_RANGES: Dict[Tuple[str, str], Dict[str, Tuple[int, int]]] = {
     ("level1", "Easy"):   {"move_constants": (1, 5), "remove_coefficient": (6, 10)},
     ("level1", "Medium"): {"move_constants": (1, 5), "remove_coefficient": (6, 10)},
+    # v1–v5 introduce combine_like_terms + normalize_negative_sign;
+    # v6–v10 shift to move_constants + remove_coefficient (level1 revision).
+    ("level2", "Medium"): {"combine_like_terms": (1, 5), "normalize_negative_sign": (1, 5)},
 }
 
 
@@ -147,28 +159,62 @@ def select_exercises(
     """
     Return (problem_ids, level, difficulty) for a student's personalized set.
 
-    Level selection: iterate levels 1→3, pick the first whose average KC P(L)
-    is below MASTERY_THRESHOLD. Assign Easy if below STRUGGLE_THRESHOLD, else Medium.
+    The selection has two blocks that are concatenated:
 
-    Exercise selection within the chosen (level, difficulty):
-      - Identify which KCs still need work (P(L) < MASTERY_THRESHOLD).
-      - If KC_EXERCISE_MAP has a version-range entry for those KCs, gather only
-        those exercises (e.g. v1–v5 for move_constants, v6–v10 for remove_coefficient).
-      - If multiple KCs need work, pool exercises from all of them so the student
-        practises the weakest ones.
-      - Fall back to the full pool when no KC-specific mapping exists.
+    REMEDIAL block (N_REMEDIAL = 2 exercises, only when any KC P(L) < STRUGGLE_THRESHOLD):
+      Collect Easy exercises for every KC that is in the struggle zone, pool them,
+      shuffle and take N_REMEDIAL.  Uses KC_EXERCISE_MAP version ranges when available
+      (e.g. level1Easy v6–v10 for remove_coefficient), otherwise the full Easy pool
+      for that KC's level.  These exercises are excluded from the regular block.
 
-    Already-completed exercises (used_ids) are excluded and the result is shuffled.
+    REGULAR block (N_ASSIGNED = 4 exercises):
+      Determine the student's working level (first level whose average KC P(L) is
+      below MASTERY_THRESHOLD) and difficulty (Easy < STRUGGLE, else Medium).
+      Within that pool, target only exercises for KCs still below mastery using
+      KC_EXERCISE_MAP; fall back to the full pool when no mapping exists.
+
+    Total: 6 exercises when remediation applies, 4 otherwise.
+    Already-completed exercises (used_ids) are excluded throughout; result is shuffled
+    within each block so the order varies every round.
     """
     excluded = DIAGNOSTIC_EXERCISES | set(used_ids or [])
+
+    # ── Remedial block ────────────────────────────────────────────────────────
+    remedial_pool: List[str] = []
+    for kc, score in knowledge_states.items():
+        if score >= STRUGGLE_THRESHOLD:
+            continue
+        kc_level = KC_TO_LEVEL.get(kc)
+        if not kc_level:
+            continue
+        subset = KC_EXERCISE_MAP.get((kc_level, "Easy", kc))
+        if subset:
+            remedial_pool.extend(ex for ex in subset if ex not in excluded)
+        else:
+            remedial_pool.extend(
+                ex for ex in EXERCISE_POOL.get((kc_level, "Easy"), [])
+                if ex not in excluded
+            )
+
+    remedial_pool = list(dict.fromkeys(remedial_pool))  # deduplicate, preserve order
+    random.shuffle(remedial_pool)
+    remedial = remedial_pool[:N_REMEDIAL]
+
+    # Exclude chosen remedial exercises so the regular block never repeats them
+    excluded_regular = excluded | set(remedial)
+
+    # ── Regular block ─────────────────────────────────────────────────────────
+    chosen_level      = "level3"
+    chosen_difficulty = "Difficult"
+    regular: List[str] = []
 
     for level in ("level1", "level2", "level3"):
         kcs = [k for k in LEVEL_KC_GROUPS[level] if k in knowledge_states]
         if not kcs:
             continue
 
-        scores   = {kc: knowledge_states[kc] for kc in kcs}
-        avg      = sum(scores.values()) / len(scores)
+        scores = {kc: knowledge_states[kc] for kc in kcs}
+        avg    = sum(scores.values()) / len(scores)
 
         if avg < STRUGGLE_THRESHOLD:
             difficulty = "Easy"
@@ -177,30 +223,36 @@ def select_exercises(
         else:
             continue  # level mastered → check next
 
-        # KCs within this level that still need work
-        weak_kcs = [kc for kc in kcs if scores[kc] < MASTERY_THRESHOLD]
+        chosen_level      = level
+        chosen_difficulty = difficulty
 
-        # Collect exercises targeting each weak KC (using version-range map when available)
+        weak_kcs = [kc for kc in kcs if scores[kc] < MASTERY_THRESHOLD]
         targeted: List[str] = []
         for kc in weak_kcs:
             subset = KC_EXERCISE_MAP.get((level, difficulty, kc))
             if subset:
-                targeted.extend(ex for ex in subset if ex not in excluded)
-
-        # Deduplicate while preserving membership (a version might cover multiple KCs)
+                targeted.extend(ex for ex in subset if ex not in excluded_regular)
         targeted = list(dict.fromkeys(targeted))
 
-        # Fall back to full pool if KC_EXERCISE_MAP has no entry for this level/difficulty
         if not targeted:
-            targeted = [ex for ex in EXERCISE_POOL.get((level, difficulty), []) if ex not in excluded]
+            targeted = [
+                ex for ex in EXERCISE_POOL.get((level, difficulty), [])
+                if ex not in excluded_regular
+            ]
 
         random.shuffle(targeted)
-        return targeted[:N_ASSIGNED], level, difficulty
+        regular = targeted[:N_ASSIGNED]
+        break
+    else:
+        # All levels mastered → enrichment with level3Difficult
+        pool = [
+            ex for ex in EXERCISE_POOL.get(("level3", "Difficult"), [])
+            if ex not in excluded_regular
+        ]
+        random.shuffle(pool)
+        regular = pool[:N_ASSIGNED]
 
-    # All levels mastered → enrichment with level3Difficult
-    pool = [ex for ex in EXERCISE_POOL.get(("level3", "Difficult"), []) if ex not in excluded]
-    random.shuffle(pool)
-    return pool[:N_ASSIGNED], "level3", "Difficult"
+    return remedial + regular, chosen_level, chosen_difficulty
 
 
 # -----------------------------------
@@ -249,7 +301,7 @@ def compute_knowledge_states(session_id: str, db_path: Path) -> Dict[str, float]
     conn = sqlite3.connect(db_path, timeout=10)
     rows = conn.execute("""
         SELECT kc, correctness, hint_per_step, timestamp
-        FROM   attempts
+        FROM   steps
         WHERE  session_id = ? AND kc IS NOT NULL AND correctness IS NOT NULL
         ORDER  BY timestamp ASC
     """, (session_id,)).fetchall()
@@ -345,18 +397,14 @@ def generate_student_report(
     conn = sqlite3.connect(db_path, timeout=10)
 
     row = conn.execute(
-        "SELECT student_id, created_at FROM sessions WHERE session_id = ?",
+        "SELECT student_id, created_at, completed_problems FROM sessions WHERE session_id = ?",
         (session_id,),
     ).fetchone()
     if not row:
         conn.close()
         return None
-    student_id, created_at = row
-
-    completions = conn.execute(
-        "SELECT problem_id, completed_at FROM completions WHERE session_id = ? ORDER BY completed_at",
-        (session_id,),
-    ).fetchall()
+    student_id, created_at, completed_problems_json = row
+    completions = json.loads(completed_problems_json)  # list of {"problem_id", "completed_at"}
 
     assignment = conn.execute(
         "SELECT level, difficulty FROM assignments WHERE session_id = ?",
@@ -365,17 +413,15 @@ def generate_student_report(
 
     stats = conn.execute("""
         SELECT
-            COUNT(CASE WHEN event_type = 'ATTEMPT' THEN 1 END),
-            COUNT(CASE WHEN event_type = 'ATTEMPT'
-                        AND correctness = 'CORRECT'
-                        AND hint_per_step = 0 THEN 1 END),
-            COUNT(CASE WHEN event_type = 'HINT_REQUEST' THEN 1 END)
-        FROM attempts WHERE session_id = ?
+            COUNT(*),
+            COUNT(CASE WHEN correctness = 'CORRECT' AND hint_per_step = 0 THEN 1 END),
+            COUNT(CASE WHEN hint_per_step = 1 THEN 1 END)
+        FROM steps WHERE session_id = ?
     """, (session_id,)).fetchone()
     total_attempts, correct_no_hint, total_hints = stats
     accuracy = round(correct_no_hint / total_attempts, 3) if total_attempts else 0.0
 
-    last_completed_at = completions[-1][1] if completions else None
+    last_completed_at = completions[-1]["completed_at"] if completions else None
     try:
         t0 = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
         t1 = datetime.fromisoformat(last_completed_at.replace("Z", "+00:00")) if last_completed_at else t0
@@ -383,10 +429,10 @@ def generate_student_report(
     except Exception:
         duration_min = None
 
-    attempts_rows = conn.execute("""
-        SELECT session_id, problem_id, step_index, event_type, kc,
-               hint_per_step, selection, input, correctness, timestamp
-        FROM   attempts
+    steps_rows = conn.execute("""
+        SELECT session_id, class_code, problem_id, step_name, kc,
+               hint_per_step, selection, action, input, correctness, timestamp
+        FROM   steps
         WHERE  session_id = ?
         ORDER  BY timestamp ASC
     """, (session_id,)).fetchall()
@@ -416,8 +462,8 @@ def generate_student_report(
     }
 
     intents_headers = [
-        "session_id", "problem_id", "step_index", "event_type", "kc",
-        "hint_per_step", "selection", "input", "correctness", "timestamp",
+        "session_id", "class_code", "problem_id", "step_name", "kc",
+        "hint_per_step", "selection", "action", "input", "correctness", "timestamp",
     ]
 
     import openpyxl
@@ -466,7 +512,7 @@ def generate_student_report(
             c = ws_int.cell(row=1, column=col, value=h)
             c.fill = blue; c.font = w_font; c.alignment = center; c.border = thin
 
-        for ri, attempt in enumerate(attempts_rows, 2):
+        for ri, attempt in enumerate(steps_rows, 2):
             for col, val in enumerate(attempt, 1):
                 c = ws_int.cell(row=ri, column=col, value=val)
                 c.border = thin
@@ -491,7 +537,7 @@ def generate_student_report(
 
         # Append only attempt rows not yet written (by offset)
         existing_attempts = ws_int.max_row - 1  # subtract header row
-        new_rows = attempts_rows[existing_attempts:]
+        new_rows = steps_rows[existing_attempts:]
         for attempt in new_rows:
             ri = ws_int.max_row + 1
             for col, val in enumerate(attempt, 1):
@@ -528,14 +574,15 @@ def generate_class_report(class_code: str, db_path: Path) -> Optional[Path]:
 
     report_rows = []
     for session_id, student_id, created_at in sessions:
-        completions = conn.execute(
-            "SELECT problem_id, completed_at FROM completions WHERE session_id = ? ORDER BY completed_at",
+        cp_row = conn.execute(
+            "SELECT completed_problems FROM sessions WHERE session_id = ?",
             (session_id,),
-        ).fetchall()
+        ).fetchone()
+        completions = json.loads(cp_row[0]) if cp_row else []
         if not completions:
             continue
 
-        last_ts = completions[-1][1]
+        last_ts = completions[-1]["completed_at"]
         try:
             t0 = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
             t1 = datetime.fromisoformat(last_ts.replace("Z", "+00:00"))
@@ -545,12 +592,10 @@ def generate_class_report(class_code: str, db_path: Path) -> Optional[Path]:
 
         stats = conn.execute("""
             SELECT
-                COUNT(CASE WHEN event_type = 'ATTEMPT' THEN 1 END),
-                COUNT(CASE WHEN event_type = 'ATTEMPT'
-                            AND correctness = 'CORRECT'
-                            AND hint_per_step = 0 THEN 1 END),
-                COUNT(CASE WHEN event_type = 'HINT_REQUEST' THEN 1 END)
-            FROM attempts WHERE session_id = ?
+                COUNT(*),
+                COUNT(CASE WHEN correctness = 'CORRECT' AND hint_per_step = 0 THEN 1 END),
+                COUNT(CASE WHEN hint_per_step = 1 THEN 1 END)
+            FROM steps WHERE session_id = ?
         """, (session_id,)).fetchone()
         total_attempts, correct_no_hint, total_hints = stats
         accuracy = round(correct_no_hint / total_attempts, 3) if total_attempts else 0.0
@@ -679,19 +724,18 @@ def create_class_db(class_code: str) -> Path:
     conn.execute("PRAGMA busy_timeout=5000")
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS sessions (
-            session_id  TEXT PRIMARY KEY,
-            class_code  TEXT,
-            student_id  TEXT,
-            created_at  TEXT,
-            hand_raised INTEGER NOT NULL DEFAULT 0
+            session_id         TEXT PRIMARY KEY,
+            class_code         TEXT,
+            student_id         TEXT,
+            created_at         TEXT,
+            hand_raised        INTEGER NOT NULL DEFAULT 0,
+            completed_problems TEXT    NOT NULL DEFAULT '[]'
         );
-        CREATE TABLE IF NOT EXISTS attempts (
-            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        CREATE TABLE IF NOT EXISTS steps (
             session_id    TEXT,
             class_code    TEXT,
             problem_id    TEXT,
-            step_index    INTEGER,
-            event_type    TEXT,
+            step_name     TEXT,
             kc            TEXT,
             hint_per_step INTEGER,
             selection     TEXT,
@@ -699,13 +743,6 @@ def create_class_db(class_code: str) -> Path:
             input         TEXT,
             correctness   TEXT,
             timestamp     TEXT
-        );
-        CREATE TABLE IF NOT EXISTS completions (
-            id           INTEGER PRIMARY KEY AUTOINCREMENT,
-            session_id   TEXT,
-            class_code   TEXT,
-            problem_id   TEXT,
-            completed_at TEXT
         );
         CREATE TABLE IF NOT EXISTS assignments (
             session_id   TEXT PRIMARY KEY,
@@ -865,9 +902,8 @@ async def logs(req: LogsRequest):
     Handles two event kinds:
       - CTAT_PROBLEM_DONE: records a completion row; triggers BKT + assignment
         once N_FIRST_EXERCISES completions are reached.
-      - CTAT_LOG_EVENT: parses the XML payload to extract event_type (ATTEMPT or
-        HINT_REQUEST), KC name, correctness, and hint_per_step flag, then stores
-        a row in the attempts table.
+      - CTAT_LOG_EVENT: parses the XML payload to extract event_type; only ATTEMPT
+        events are stored in the steps table with KC, correctness, and hint_per_step.
 
     hint_per_step is set to 1 for any step where the student requested a hint
     before submitting, so BKT can exclude those from the learning signal.
@@ -900,18 +936,16 @@ async def logs(req: LogsRequest):
         if kind == "CTAT_PROBLEM_DONE":
             problem_id = p.get("problemId")
             print(f"  [DONE]  session={req.session_id[:8]}  problem={problem_id}")
-            cursor.execute("""
-                INSERT INTO completions (session_id, class_code, problem_id, completed_at)
-                VALUES (?, ?, ?, ?)
-            """, (req.session_id, class_code, problem_id, e.get("ts")))
-            # Student moved to next problem — clear raised hand
-            try:
-                cursor.execute(
-                    "UPDATE sessions SET hand_raised = 0 WHERE session_id = ?",
-                    (req.session_id,),
-                )
-            except Exception:
-                pass
+            row = cursor.execute(
+                "SELECT completed_problems FROM sessions WHERE session_id = ?",
+                (req.session_id,),
+            ).fetchone()
+            completed = json.loads(row[0]) if row else []
+            completed.append({"problem_id": problem_id, "completed_at": e.get("ts")})
+            cursor.execute(
+                "UPDATE sessions SET completed_problems = ?, hand_raised = 0 WHERE session_id = ?",
+                (json.dumps(completed), req.session_id),
+            )
             trigger_report = True
             continue
 
@@ -957,22 +991,30 @@ async def logs(req: LogsRequest):
                 f"  problem={problem_id}  sel={selection}  kc={kc}"
             )
 
-        # ── Student attempt (tool message — has input/selection, no KC) ──────
+        # ── Student attempt — only this event type is stored ─────────────────
         elif event_type == "ATTEMPT":
             hint_per_step = 1 if selection in hints_seen.get(problem_id, set()) else 0
-            # Store so the paired RESULT event can inherit this flag.
             if problem_id is not None:
                 step_hints[problem_id] = hint_per_step
             print(
                 f"  [ATTEMPT]  session={req.session_id[:8]}"
-                f"  problem={problem_id}  step={p.get('stepIndex')}"
+                f"  problem={problem_id}  sel={selection}"
                 f"  kc={kc}  hint={bool(hint_per_step)}  input={p.get('input')!r}"
                 f"  → {correctness or 'n/a'}"
             )
+            cursor.execute("""
+                INSERT INTO steps
+                    (session_id, class_code, problem_id, step_name,
+                     kc, hint_per_step, selection, action, input, correctness, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                req.session_id, class_code, problem_id,
+                selection, kc, hint_per_step,
+                selection, p.get("action"), p.get("input"), correctness, e.get("ts"),
+            ))
 
-        # ── Tutor evaluation (RESULT / TUTOR_MSG — has KC + correctness) ─────
+        # ── Tutor evaluation (RESULT / TUTOR_MSG) — inherit hint flag, no store
         elif kc:
-            # Inherit hint_per_step from the preceding ATTEMPT for this problem.
             hint_per_step = step_hints.pop(problem_id, 0) if problem_id else 0
             print(
                 f"  [{event_type}]  session={req.session_id[:8]}"
@@ -980,25 +1022,17 @@ async def logs(req: LogsRequest):
                 f"  → {correctness or 'n/a'}  hint={bool(hint_per_step)}"
             )
 
-        cursor.execute("""
-            INSERT INTO attempts
-                (session_id, class_code, problem_id, step_index, event_type,
-                 kc, hint_per_step, selection, action, input, correctness, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            req.session_id, class_code, problem_id,
-            p.get("stepIndex"), event_type, kc, hint_per_step,
-            selection, p.get("action"), p.get("input"), correctness, e.get("ts"),
-        ))
-
     conn.commit()
 
     # ── Trigger BKT + new assignment after every completed exercise round ────
     if trigger_report:
-        n_done = cursor.execute(
-            "SELECT COUNT(*) FROM completions WHERE session_id = ?",
+        row = cursor.execute(
+            "SELECT completed_problems FROM sessions WHERE session_id = ?",
             (req.session_id,),
-        ).fetchone()[0]
+        ).fetchone()
+        completed = json.loads(row[0]) if row else []
+        n_done = len(completed)
+        all_completed_ids = [c["problem_id"] for c in completed]
 
         if n_done == N_FIRST_EXERCISES:
             # Diagnostic round done → first BKT run, phase-1 report
@@ -1011,14 +1045,7 @@ async def logs(req: LogsRequest):
             return {"status": "saved", "assignment_triggered": True}
 
         elif n_done > N_FIRST_EXERCISES:
-            # Get all completed problem IDs (diagnostic + personalized so far)
-            all_completed = [
-                r[0] for r in cursor.execute(
-                    "SELECT problem_id FROM completions WHERE session_id = ?",
-                    (req.session_id,),
-                ).fetchall()
-            ]
-            personalized_done = [pid for pid in all_completed if pid not in DIAGNOSTIC_EXERCISES]
+            personalized_done = [pid for pid in all_completed_ids if pid not in DIAGNOSTIC_EXERCISES]
 
             assignment_row = cursor.execute(
                 "SELECT problem_ids FROM assignments WHERE session_id = ?",
@@ -1182,8 +1209,8 @@ def classroom_progress(class_code: str):
     for session_id, student_id in cursor.fetchall():
         cursor.execute("""
             SELECT problem_id, correctness, COUNT(*) as cnt
-            FROM   attempts
-            WHERE  session_id = ? AND event_type = 'ATTEMPT'
+            FROM   steps
+            WHERE  session_id = ?
             GROUP  BY problem_id, correctness
         """, (session_id,))
         problems: Dict[str, Dict[str, int]] = {}

@@ -27,7 +27,17 @@
     <Asset name="HTML_level1Medium_v2.html" path="HTML"/>
     <Asset name="HTML_level1Medium_v3.html" path="HTML"/>
     <Asset name="HTML_level1Medium_v4.html" path="HTML"/>
-    <Asset name="HTML_level1Medium_v5.html" path="HTML"/>
+    <Asset name="HTML_level1Medium_v5.html" path="HTML"/>    
+    <Asset name="level1Medium_v6.brd" path="FinalBRDs"/>
+    <Asset name="level1Medium_v7.brd" path="FinalBRDs"/>
+    <Asset name="level1Medium_v8.brd" path="FinalBRDs"/>
+    <Asset name="level1Medium_v9.brd" path="FinalBRDs"/>
+    <Asset name="level1Medium_v10.brd" path="FinalBRDs"/>
+    <Asset name="HTML_level1Medium_v6.html" path="HTML"/>
+    <Asset name="HTML_level1Medium_v7.html" path="HTML"/>
+    <Asset name="HTML_level1Medium_v8.html" path="HTML"/>
+    <Asset name="HTML_level1Medium_v9.html" path="HTML"/>
+    <Asset name="HTML_level1Medium_v10.html" path="HTML"/>
     <Asset name="level1Medium-styles.css" path="HTML/Assets"/>
   </Assets>
 </Package>
