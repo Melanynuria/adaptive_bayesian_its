@@ -1,4 +1,11 @@
 {
-    "sqltools.connections": [],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "backend_fastAPI/app/data/classes/c1_17h59_20-05-2026/c1_17h59_20-05-2026.db",
+            "name": "c1"
+        }
+    ],
     "sqltools.useNodeRuntime": true
 }

@@ -33,3 +33,16 @@ export async function getClassStatus(class_code: string) {
   const res = await api.get(`/api/classroom/${class_code}/status`);
   return res.data as { ended: boolean };
 }
+
+/** Teacher: download the class Excel report as a file. */
+export async function downloadReport(class_code: string): Promise<void> {
+  const res = await api.get(`/api/classroom/${class_code}/report`, {
+    responseType: "blob",
+  });
+  const url = URL.createObjectURL(res.data as Blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `report_${class_code}.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
+}

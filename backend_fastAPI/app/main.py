@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import StreamingResponse, FileResponse
+from fastapi.responses import StreamingResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -81,11 +81,15 @@ BKT_PARAMS: Dict[str, Dict[str, float]] = {
 # ADAPTIVE EXERCISE SELECTION
 # -----------------------------------
 
-STRUGGLE_THRESHOLD = 0.40   # below → remedial + Easy
-MASTERY_THRESHOLD  = 0.80   # above → level mastered, try next
-N_ASSIGNED         = 4      # regular exercises per personalized round
-N_REMEDIAL         = 2      # Easy exercises prepended when any KC P(L) < STRUGGLE_THRESHOLD
-# Total per round: N_REMEDIAL + N_ASSIGNED = 6 when remediation applies, N_ASSIGNED = 4 otherwise
+STRUGGLE_THRESHOLD   = 0.40   # below → remedial + Easy
+MASTERY_THRESHOLD    = 0.80   # skip threshold for single-KC levels; difficulty boundary
+LEVEL_SKIP_THRESHOLD = 0.85   # if ≥ N_LEVEL_SKIP_COUNT individual KCs exceed this, skip the level
+N_LEVEL_SKIP_COUNT   = 2      # KCs above LEVEL_SKIP_THRESHOLD required to skip a multi-KC level
+N_ASSIGNED           = 4      # non-remedial exercises per round (N_REGULAR + N_BONUS)
+N_REGULAR            = 3      # targeted exercises in regular block
+N_BONUS              = 1      # random Medium/Difficult exercise appended to every round
+N_REMEDIAL           = 2      # Easy exercises prepended when any KC P(L) < STRUGGLE_THRESHOLD
+# Total per round: N_REMEDIAL + N_REGULAR + N_BONUS = 6 when remediation applies, 4 otherwise
 
 # KCs used to evaluate mastery of each level (simplification excluded — no BKT params)
 LEVEL_KC_GROUPS: Dict[str, List[str]] = {
@@ -105,7 +109,7 @@ KC_TO_LEVEL: Dict[str, str] = {
 DIAGNOSTIC_EXERCISES = {"level1Difficult_v1", "level2Difficult_v1", "level3Difficult_v1"}
 
 # Final assessment exercises — reserved for the post-session evaluation, never in regular pool
-FINAL_EXERCISES = {"level1Easy_v5", "level2Easy_v5", "level3Easy_v5"}
+FINAL_EXERCISES = {"level1Difficult_v5", "level2Difficult_v5", "level3Difficult_v5"}
 
 # All exercises that must never appear in personalised rounds
 _EXCLUDED_FROM_POOL = DIAGNOSTIC_EXERCISES | FINAL_EXERCISES
@@ -184,23 +188,24 @@ def select_exercises(
     """
     Return (problem_ids, level, difficulty) for a student's personalized set.
 
-    The selection has two blocks that are concatenated:
+    The selection has three blocks concatenated:
 
     REMEDIAL block (N_REMEDIAL = 2 exercises, only when any KC P(L) < STRUGGLE_THRESHOLD):
-      Collect Easy exercises for every KC that is in the struggle zone, pool them,
-      shuffle and take N_REMEDIAL.  Uses KC_EXERCISE_MAP version ranges when available
-      (e.g. level1Easy v6–v10 for remove_coefficient), otherwise the full Easy pool
-      for that KC's level.  These exercises are excluded from the regular block.
+      Collect Easy exercises for every struggling KC, shuffle, take N_REMEDIAL.
 
-    REGULAR block (N_ASSIGNED = 4 exercises):
-      Determine the student's working level (first level whose average KC P(L) is
-      below MASTERY_THRESHOLD) and difficulty (Easy < STRUGGLE, else Medium).
-      Within that pool, target only exercises for KCs still below mastery using
-      KC_EXERCISE_MAP; fall back to the full pool when no mapping exists.
+    REGULAR block (N_REGULAR = 3 exercises):
+      Determine the student's working level using a two-condition skip rule —
+      a level is skipped when ≥ N_LEVEL_SKIP_COUNT (2) individual KCs exceed
+      LEVEL_SKIP_THRESHOLD (0.85), OR when the level has fewer than 2 KCs and the
+      average meets MASTERY_THRESHOLD (0.80).  Difficulty: Easy if avg < STRUGGLE,
+      Difficult if avg ≥ MASTERY but level not yet skipped, Medium otherwise.
 
-    Total: 6 exercises when remediation applies, 4 otherwise.
-    Already-completed exercises (used_ids) are excluded throughout; result is shuffled
-    within each block so the order varies every round.
+    BONUS block (N_BONUS = 1 exercise):
+      One random exercise from the Medium or Difficult pool (any level), giving the
+      student varied exposure beyond their current assigned level.
+
+    Total: N_REMEDIAL + N_REGULAR + N_BONUS = 6 when remediation applies, 4 otherwise.
+    Already-completed exercises (used_ids) are excluded throughout.
     """
     excluded = DIAGNOSTIC_EXERCISES | set(used_ids or [])
 
@@ -241,12 +246,18 @@ def select_exercises(
         scores = {kc: knowledge_states[kc] for kc in kcs}
         avg    = sum(scores.values()) / len(scores)
 
+        # Skip level if ≥ N_LEVEL_SKIP_COUNT individual KCs exceed LEVEL_SKIP_THRESHOLD,
+        # or (for single-KC levels) fall back to average-based mastery check.
+        n_above_skip = sum(1 for v in scores.values() if v > LEVEL_SKIP_THRESHOLD)
+        if n_above_skip >= N_LEVEL_SKIP_COUNT or (len(kcs) < N_LEVEL_SKIP_COUNT and avg >= MASTERY_THRESHOLD):
+            continue  # level mastered → check next
+
         if avg < STRUGGLE_THRESHOLD:
             difficulty = "Easy"
         elif avg < MASTERY_THRESHOLD:
             difficulty = "Medium"
         else:
-            continue  # level mastered → check next
+            difficulty = "Difficult"  # avg high but individual KCs not all above skip threshold
 
         chosen_level      = level
         chosen_difficulty = difficulty
@@ -266,18 +277,31 @@ def select_exercises(
             ]
 
         random.shuffle(targeted)
-        regular = targeted[:N_ASSIGNED]
+        regular = targeted[:N_REGULAR]
         break
     else:
-        # All levels mastered → enrichment with level3Difficult
+        # All levels skipped → enrichment with level3Difficult
         pool = [
             ex for ex in EXERCISE_POOL.get(("level3", "Difficult"), [])
             if ex not in excluded_regular
         ]
         random.shuffle(pool)
-        regular = pool[:N_ASSIGNED]
+        regular = pool[:N_REGULAR]
 
-    return remedial + regular, chosen_level, chosen_difficulty
+    # ── Bonus block: 1 random Medium or Difficult exercise ───────────────────
+    excluded_bonus = excluded | set(remedial) | set(regular)
+    bonus_pool: List[str] = []
+    for diff in ("Medium", "Difficult"):
+        for lvl in ("level1", "level2", "level3"):
+            bonus_pool.extend(
+                ex for ex in EXERCISE_POOL.get((lvl, diff), [])
+                if ex not in excluded_bonus
+            )
+    bonus_pool = list(dict.fromkeys(bonus_pool))
+    random.shuffle(bonus_pool)
+    bonus = bonus_pool[:N_BONUS]
+
+    return remedial + regular + bonus, chosen_level, chosen_difficulty
 
 
 # -----------------------------------
@@ -831,7 +855,7 @@ ACTIVE_CLASSES: Dict[str, Path] = {}
 SESSIONS: Dict[str, Dict[str, Any]] = {}
 CLASS_STREAMS: Dict[str, List[asyncio.Queue]] = {}
 CLASS_ASSIGNMENTS: Dict[str, str] = {}
-ENDED_CLASSES: Set[str] = {}  # class_codes for which the teacher has ended the session
+ENDED_CLASSES: Set[str] = set()  # class_codes for which the teacher has ended the session
 
 N_FIRST_EXERCISES = 3
 
@@ -1044,7 +1068,7 @@ async def logs(req: LogsRequest):
                 f"  problem={problem_id}  sel={selection}  kc={kc}"
             )
 
-        # ── Student attempt — only this event type is stored ─────────────────
+        # ── Student attempt — track hint state only; DB insert deferred to RESULT ─
         elif event_type == "ATTEMPT":
             hint_per_step = 1 if selection in hints_seen.get(problem_id, set()) else 0
             if problem_id is not None:
@@ -1055,10 +1079,16 @@ async def logs(req: LogsRequest):
                 f"  kc={kc}  hint={bool(hint_per_step)}  input={p.get('input')!r}"
                 f"  → {correctness or 'n/a'}"
             )
-            _step_row = (
-                req.session_id, class_code, problem_id,
-                selection, kc, hint_per_step,
-                selection, p.get("action"), p.get("input"), correctness, e.get("ts"),
+            # kc and correctness are None on ATTEMPT events — they only arrive on the
+            # paired RESULT event below, so we insert there (not here).
+
+        # ── Tutor evaluation (RESULT / TUTOR_MSG) — kc and correctness known; store now
+        elif kc:
+            hint_per_step = step_hints.pop(problem_id, 0) if problem_id else 0
+            print(
+                f"  [{event_type}]  session={req.session_id[:8]}"
+                f"  problem={problem_id}  kc={kc}"
+                f"  → {correctness or 'n/a'}  hint={bool(hint_per_step)}"
             )
             _step_sql = """
                 INSERT INTO steps
@@ -1066,6 +1096,11 @@ async def logs(req: LogsRequest):
                      kc, hint_per_step, selection, action, input, correctness, timestamp)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
+            _step_row = (
+                req.session_id, class_code, problem_id,
+                selection, kc, hint_per_step,
+                selection, p.get("action"), p.get("input"), correctness, e.get("ts"),
+            )
             # Main class DB
             cursor.execute(_step_sql, _step_row)
             # Per-student DB
@@ -1076,15 +1111,6 @@ async def logs(req: LogsRequest):
                 first_conn.execute(_step_sql, _step_row)
             if problem_id in FINAL_EXERCISES:
                 final_conn.execute(_step_sql, _step_row)
-
-        # ── Tutor evaluation (RESULT / TUTOR_MSG) — inherit hint flag, no store
-        elif kc:
-            hint_per_step = step_hints.pop(problem_id, 0) if problem_id else 0
-            print(
-                f"  [{event_type}]  session={req.session_id[:8]}"
-                f"  problem={problem_id}  kc={kc}"
-                f"  → {correctness or 'n/a'}  hint={bool(hint_per_step)}"
-            )
 
     conn.commit()
     if student_conn:
@@ -1328,7 +1354,10 @@ def classroom_progress(class_code: str):
         })
 
     conn.close()
-    return {"students": result}
+    return JSONResponse(
+        content={"students": result},
+        headers={"Cache-Control": "no-store, no-cache, must-revalidate"},
+    )
 
 
 @app.get("/api/classroom/{class_code}/report")
@@ -1388,7 +1417,7 @@ def get_results(session_id: str):
 
     diag_rows = conn.execute(f"""
         SELECT kc, correctness, hint_per_step, timestamp
-        FROM   attempts
+        FROM   steps
         WHERE  session_id = ? AND kc IS NOT NULL AND correctness IS NOT NULL
           AND  problem_id IN ({placeholders})
         ORDER  BY timestamp ASC
@@ -1396,7 +1425,7 @@ def get_results(session_id: str):
 
     all_rows = conn.execute("""
         SELECT kc, correctness, hint_per_step, timestamp
-        FROM   attempts
+        FROM   steps
         WHERE  session_id = ? AND kc IS NOT NULL AND correctness IS NOT NULL
         ORDER  BY timestamp ASC
     """, (session_id,)).fetchall()

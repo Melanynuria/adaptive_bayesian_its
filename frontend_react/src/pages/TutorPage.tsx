@@ -5,7 +5,7 @@ import { raiseHand } from "../api/sessionApi";
 import { getClassStatus } from "../api/classroomApi";
 import type { CTATMessage } from "../types/ctat";
 
-const FINAL_ASSESSMENT_IDS = ["level1Easy_v5", "level2Easy_v5", "level3Easy_v5"];
+const FINAL_ASSESSMENT_IDS = ["level1Difficult_v5", "level2Difficult_v5", "level3Difficult_v5"];
 
 type LocationState = {
   sessionId: string;
@@ -43,14 +43,15 @@ export default function TutorPage() {
   const st = loc.state as LocationState | null;
 
   const [sessionId] = useState(st?.sessionId ?? "");
-  const [queue] = useState<string[]>(st?.problemIds ?? []);
+  const [queue, setQueue] = useState<string[]>(st?.problemIds ?? []);
   const [idx, setIdx] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [toast, setToast] = useState<{ message: string; top: string; left: string } | null>(null);
   const [handEnabled, setHandEnabled] = useState(false);
   const [handRaised, setHandRaised]   = useState(false);
   const [sessionEnded, setSessionEnded] = useState(false);
-  const isFinalAssessment = st?.isFinalAssessment ?? false;
+  const [confirmFinal, setConfirmFinal] = useState(false);
+  const [isFinalAssessment, setIsFinalAssessment] = useState(st?.isFinalAssessment ?? false);
 
   const bufferRef       = useRef<CTATMessage[]>([]);
   const flushTimerRef   = useRef<number | null>(null);
@@ -171,14 +172,25 @@ export default function TutorPage() {
   }
 
   function handleStartFinalAssessment() {
-    nav("/tutor", {
-      state: {
-        sessionId,
-        problemIds: FINAL_ASSESSMENT_IDS,
-        classCode: st?.classCode,
-        isFinalAssessment: true,
-      },
-    });
+    // Cancel any pending log flush and clear the buffer so stale events
+    // from the interrupted exercise don't interfere with the final assessment.
+    if (flushTimerRef.current !== null) {
+      window.clearTimeout(flushTimerRef.current);
+      flushTimerRef.current = null;
+    }
+    bufferRef.current = [];
+
+    // Reset all per-problem state and switch the queue in-place.
+    // Navigating /tutor → /tutor does NOT remount the component, so we must
+    // update state directly instead of calling nav().
+    stepAttemptsRef.current = {};
+    setQueue(FINAL_ASSESSMENT_IDS);
+    setIdx(0);
+    setIsDone(false);
+    setHandEnabled(false);
+    setHandRaised(false);
+    setIsFinalAssessment(true);
+    setConfirmFinal(false);
   }
 
   useEffect(() => {
@@ -323,7 +335,7 @@ export default function TutorPage() {
               El professor ha finalitzat la sessió
             </span>
             <button
-              onClick={handleStartFinalAssessment}
+              onClick={() => setConfirmFinal(true)}
               style={{
                 padding: "5px 12px", backgroundColor: "#e65100",
                 color: "white", border: "none", borderRadius: 6,
@@ -441,6 +453,54 @@ export default function TutorPage() {
           }}
         />
       </div>
+
+      {/* Final-assessment confirmation modal */}
+      {confirmFinal && (
+        <div style={{
+          position: "fixed", inset: 0,
+          backgroundColor: "rgba(0,0,0,0.5)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 10000,
+        }}>
+          <div style={{
+            backgroundColor: "white", borderRadius: 16,
+            padding: "40px 48px", maxWidth: 460, width: "90%",
+            textAlign: "center", boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+          }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>📝</div>
+            <h2 style={{ marginBottom: 10, color: "#1a1a2e", fontFamily: "Verdana" }}>
+              Estàs preparat per fer la prova final?
+            </h2>
+            <p style={{ color: "#666", fontSize: 14, marginBottom: 28, fontFamily: "Verdana", lineHeight: 1.6 }}>
+              Es mostraran 3 exercicis per comprovar el teu progrés.<br />
+              Un cop comencis no es pot pausar.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+              <button
+                onClick={handleStartFinalAssessment}
+                style={{
+                  padding: "12px 28px", backgroundColor: "#2e7d32",
+                  color: "white", border: "none", borderRadius: 8,
+                  cursor: "pointer", fontSize: 15, fontWeight: "bold",
+                  fontFamily: "Verdana",
+                }}
+              >
+                Sí, comencem!
+              </button>
+              <button
+                onClick={() => setConfirmFinal(false)}
+                style={{
+                  padding: "12px 20px", backgroundColor: "#f5f5f5",
+                  color: "#555", border: "1px solid #ddd", borderRadius: 8,
+                  cursor: "pointer", fontSize: 14, fontFamily: "Verdana",
+                }}
+              >
+                No encara
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { startClass, getProgress, endClass } from "../api/classroomApi";
+import { startClass, getProgress, endClass, downloadReport } from "../api/classroomApi";
 
 type StudentProgress = {
   student_id: string;
@@ -20,6 +20,11 @@ const KC_LIST: { key: string; short: string; full: string }[] = [
   { key: "expand_eliminate_parentheses", short: "EEP", full: "Expand / eliminate parentheses" },
   { key: "normalize_negative_sign",      short: "NNS", full: "Normalize negative sign" },
 ];
+
+function allKcsMastered(knowledge_states: Record<string, number>): boolean {
+  const values = Object.values(knowledge_states);
+  return values.length > 0 && values.every(v => v > 0.9);
+}
 
 function kcBackground(p: number): string {
   if (p < 0.40) return "#ffcdd2";   // red   — struggling
@@ -42,6 +47,7 @@ export default function TeacherPage() {
   const [lastUpdate, setLastUpdate]           = useState<Date | null>(null);
   const [confirmEnd, setConfirmEnd]           = useState(false);
   const [sessionEnded, setSessionEnded]       = useState(false);
+  const [downloading, setDownloading]         = useState(false);
 
   useEffect(() => {
     if (!activeClass) return;
@@ -69,6 +75,18 @@ export default function TeacherPage() {
       setConfirmEnd(false);
     } catch {
       // best-effort
+    }
+  }
+
+  async function onDownloadReport() {
+    if (!activeClass) return;
+    setDownloading(true);
+    try {
+      await downloadReport(activeClass);
+    } catch {
+      // backend returns 404 if no student has finished yet
+    } finally {
+      setDownloading(false);
     }
   }
 
@@ -152,10 +170,25 @@ export default function TeacherPage() {
               </span>
             )}
             {lastUpdate && (
-              <span style={{ marginLeft: "auto", fontSize: 12, color: "#888" }}>
+              <span style={{ fontSize: 12, color: "#888" }}>
                 Actualitzat: {lastUpdate.toLocaleTimeString()}
               </span>
             )}
+            <button
+              onClick={onDownloadReport}
+              disabled={downloading || students.length === 0}
+              title="Descarrega el informe Excel de la classe"
+              style={{
+                marginLeft: "auto",
+                padding: "6px 14px", backgroundColor: "#1565C0",
+                color: "white", border: "none", borderRadius: 6,
+                cursor: (downloading || students.length === 0) ? "not-allowed" : "pointer",
+                fontSize: 12, fontWeight: "bold",
+                opacity: (downloading || students.length === 0) ? 0.5 : 1,
+              }}
+            >
+              {downloading ? "Descarregant…" : "⬇ Informe Excel"}
+            </button>
 
             {/* End-session button / confirm */}
             {!sessionEnded && (
@@ -254,18 +287,31 @@ export default function TeacherPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map((s, i) => (
+                  {students.map((s, i) => {
+                    const mastered = allKcsMastered(s.knowledge_states);
+                    return (
                     <tr
                       key={s.session_id}
                       style={{
-                        backgroundColor: s.hand_raised
+                        backgroundColor: mastered
+                          ? "#e8f5e9"
+                          : s.hand_raised
                           ? "#fff8e1"
                           : i % 2 === 0 ? "#ffffff" : "#f9f9f9",
-                        outline: s.hand_raised ? "2px solid #ff9800" : "none",
+                        outline: mastered
+                          ? "2px solid #4CAF50"
+                          : s.hand_raised
+                          ? "2px solid #ff9800"
+                          : "none",
                       }}
                     >
                       <Td>
                         <span style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
+                          {mastered && (
+                            <span title="Ha après tots els conceptes! Tots els KC > 90%" style={{ fontSize: 16 }}>
+                              ⭐
+                            </span>
+                          )}
                           {s.hand_raised && (
                             <span
                               title="L'alumne demana ajuda"
@@ -311,7 +357,8 @@ export default function TeacherPage() {
                         );
                       })}
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
