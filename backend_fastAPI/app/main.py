@@ -3,7 +3,7 @@ from fastapi.responses import StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 from pathlib import Path
 import re
 import uuid
@@ -85,6 +85,12 @@ KC_TO_LEVEL: Dict[str, str] = {
 # Exercises already used in the diagnostic phase — never reassigned
 DIAGNOSTIC_EXERCISES = {"level1Difficult_v1", "level2Difficult_v1", "level3Difficult_v1"}
 
+# Final assessment exercises — reserved for the post-session evaluation, never in regular pool
+FINAL_EXERCISES = {"level1Easy_v5", "level2Easy_v5", "level3Easy_v5"}
+
+# All exercises that must never appear in personalised rounds
+_EXCLUDED_FROM_POOL = DIAGNOSTIC_EXERCISES | FINAL_EXERCISES
+
 
 def _natural_key(s: str) -> list:
     """Split a string into alternating text/int segments so sort order is 'v2 < v10'."""
@@ -107,7 +113,7 @@ def _build_exercise_pool() -> Dict[Tuple[str, str], List[str]]:
         for f in html_dir.glob("*.html"):
             name = re.sub(r"\.html$", "", f.name)
             name = re.sub(r"^HTML_", "", name)
-            if name not in DIAGNOSTIC_EXERCISES:
+            if name not in _EXCLUDED_FROM_POOL:
                 ids.append(name)
         ids.sort(key=_natural_key)
         pool[(m.group(1), m.group(2))] = ids
@@ -794,6 +800,7 @@ ACTIVE_CLASSES: Dict[str, Path] = {}
 SESSIONS: Dict[str, Dict[str, Any]] = {}
 CLASS_STREAMS: Dict[str, List[asyncio.Queue]] = {}
 CLASS_ASSIGNMENTS: Dict[str, str] = {}
+ENDED_CLASSES: Set[str] = {}  # class_codes for which the teacher has ended the session
 
 N_FIRST_EXERCISES = 3
 
@@ -1265,6 +1272,77 @@ def download_report(class_code: str):
         latest, filename=latest.name,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
+
+
+@app.post("/api/classroom/{class_code}/end")
+async def end_class(class_code: str):
+    """
+    Teacher endpoint: mark the session as ended and notify all connected students via SSE.
+
+    Students poll GET /status; when they see ended=true they can start the final assessment.
+    """
+    ENDED_CLASSES.add(class_code)
+    for q in CLASS_STREAMS.get(class_code, []):
+        await q.put({"type": "session_ended"})
+    print(f"[CLASS ENDED] {class_code}")
+    return {"status": "ended", "class_code": class_code}
+
+
+@app.get("/api/classroom/{class_code}/status")
+def class_status(class_code: str):
+    """Students poll this to find out whether the teacher has ended the session."""
+    return {"ended": class_code in ENDED_CLASSES}
+
+
+@app.get("/api/session/{session_id}/results")
+def get_results(session_id: str):
+    """
+    Return per-KC knowledge states for the results page.
+
+    initial_states: BKT run over only the 3 diagnostic exercises — reflects
+                    the student's starting point before personalised practice.
+    final_states:   BKT run over ALL attempts (diagnostic + personalised + final
+                    assessment) — reflects the student's state at the end of the session.
+    """
+    db_path = get_db_for_session(session_id)
+    if db_path is None or not db_path.exists():
+        raise HTTPException(status_code=404, detail="Session not found.")
+
+    diag_ids = tuple(DIAGNOSTIC_EXERCISES)
+    placeholders = ",".join("?" * len(diag_ids))
+
+    conn = sqlite3.connect(db_path, timeout=10)
+
+    diag_rows = conn.execute(f"""
+        SELECT kc, correctness, hint_per_step, timestamp
+        FROM   attempts
+        WHERE  session_id = ? AND kc IS NOT NULL AND correctness IS NOT NULL
+          AND  problem_id IN ({placeholders})
+        ORDER  BY timestamp ASC
+    """, (session_id, *diag_ids)).fetchall()
+
+    all_rows = conn.execute("""
+        SELECT kc, correctness, hint_per_step, timestamp
+        FROM   attempts
+        WHERE  session_id = ? AND kc IS NOT NULL AND correctness IS NOT NULL
+        ORDER  BY timestamp ASC
+    """, (session_id,)).fetchall()
+
+    conn.close()
+
+    def _run(rows):
+        states = {kc: p["p0"] for kc, p in BKT_PARAMS.items()}
+        for kc, correctness, hint_per_step, _ in rows:
+            if kc not in BKT_PARAMS:
+                continue
+            correct = (correctness == "CORRECT") and (not hint_per_step)
+            states[kc] = bkt_update(states[kc], correct, BKT_PARAMS[kc])
+        return {kc: round(v, 3) for kc, v in states.items()}
+
+    return {
+        "initial_states": _run(diag_rows),
+        "final_states":   _run(all_rows),
+    }
 
 
 # -----------------------------------

@@ -22,3 +22,14 @@ export async function getProgress(class_code: string) {
   const res = await api.get(`/api/classroom/${class_code}/progress`);
   return res.data as { students: StudentProgress[] };
 }
+
+/** Teacher: mark the session as ended so students see the final-assessment button. */
+export async function endClass(class_code: string) {
+  await api.post(`/api/classroom/${class_code}/end`);
+}
+
+/** Student: poll to find out whether the teacher has ended the session. */
+export async function getClassStatus(class_code: string) {
+  const res = await api.get(`/api/classroom/${class_code}/status`);
+  return res.data as { ended: boolean };
+}

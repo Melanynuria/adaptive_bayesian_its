@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { startClass, getProgress } from "../api/classroomApi";
+import { startClass, getProgress, endClass } from "../api/classroomApi";
 
 type StudentProgress = {
   student_id: string;
@@ -34,12 +34,14 @@ function kcTextColor(p: number): string {
 }
 
 export default function TeacherPage() {
-  const [classCodeInput, setClassCodeInput] = useState("");
-  const [activeClass, setActiveClass]       = useState<string | null>(null);
-  const [students, setStudents]             = useState<StudentProgress[]>([]);
-  const [error, setError]                   = useState<string | null>(null);
-  const [starting, setStarting]             = useState(false);
-  const [lastUpdate, setLastUpdate]         = useState<Date | null>(null);
+  const [classCodeInput, setClassCodeInput]   = useState("");
+  const [activeClass, setActiveClass]         = useState<string | null>(null);
+  const [students, setStudents]               = useState<StudentProgress[]>([]);
+  const [error, setError]                     = useState<string | null>(null);
+  const [starting, setStarting]               = useState(false);
+  const [lastUpdate, setLastUpdate]           = useState<Date | null>(null);
+  const [confirmEnd, setConfirmEnd]           = useState(false);
+  const [sessionEnded, setSessionEnded]       = useState(false);
 
   useEffect(() => {
     if (!activeClass) return;
@@ -58,6 +60,17 @@ export default function TeacherPage() {
     const interval = setInterval(fetchProgress, 5000);
     return () => clearInterval(interval);
   }, [activeClass]);
+
+  async function onEndClass() {
+    if (!activeClass) return;
+    try {
+      await endClass(activeClass);
+      setSessionEnded(true);
+      setConfirmEnd(false);
+    } catch {
+      // best-effort
+    }
+  }
 
   async function onStartClass() {
     const cc = classCodeInput.trim();
@@ -119,21 +132,73 @@ export default function TeacherPage() {
         <>
           {/* Active class banner */}
           <div style={{
-            display: "flex", alignItems: "center", gap: 16,
+            display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
             marginBottom: 20, padding: "12px 16px",
-            backgroundColor: "#e8f5e9", borderRadius: 8, border: "1px solid #a5d6a7",
+            backgroundColor: sessionEnded ? "#fce4ec" : "#e8f5e9",
+            borderRadius: 8,
+            border: `1px solid ${sessionEnded ? "#f48fb1" : "#a5d6a7"}`,
           }}>
             <span style={{ fontSize: 18 }}>
-              Classe activa: <strong>{activeClass}</strong>
+              Classe: <strong>{activeClass}</strong>
             </span>
             <span style={{
               width: 10, height: 10, borderRadius: "50%",
-              backgroundColor: "#4CAF50", display: "inline-block",
+              backgroundColor: sessionEnded ? "#e53935" : "#4CAF50",
+              display: "inline-block",
             }} />
+            {sessionEnded && (
+              <span style={{ fontSize: 13, color: "#c62828", fontWeight: "bold" }}>
+                Sessió finalitzada — els alumnes veuen la prova final
+              </span>
+            )}
             {lastUpdate && (
               <span style={{ marginLeft: "auto", fontSize: 12, color: "#888" }}>
                 Actualitzat: {lastUpdate.toLocaleTimeString()}
               </span>
+            )}
+
+            {/* End-session button / confirm */}
+            {!sessionEnded && (
+              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+                {!confirmEnd ? (
+                  <button
+                    onClick={() => setConfirmEnd(true)}
+                    style={{
+                      padding: "7px 16px", backgroundColor: "#e53935",
+                      color: "white", border: "none", borderRadius: 6,
+                      cursor: "pointer", fontWeight: "bold", fontSize: 13,
+                    }}
+                  >
+                    Finalitzar sessió
+                  </button>
+                ) : (
+                  <>
+                    <span style={{ fontSize: 13, color: "#c62828", fontWeight: "bold" }}>
+                      Segur?
+                    </span>
+                    <button
+                      onClick={onEndClass}
+                      style={{
+                        padding: "7px 14px", backgroundColor: "#c62828",
+                        color: "white", border: "none", borderRadius: 6,
+                        cursor: "pointer", fontWeight: "bold", fontSize: 13,
+                      }}
+                    >
+                      Sí, finalitzar
+                    </button>
+                    <button
+                      onClick={() => setConfirmEnd(false)}
+                      style={{
+                        padding: "7px 12px", backgroundColor: "#eee",
+                        border: "1px solid #ccc", borderRadius: 6,
+                        cursor: "pointer", fontSize: 13, color: "#555",
+                      }}
+                    >
+                      Cancel·lar
+                    </button>
+                  </>
+                )}
+              </div>
             )}
           </div>
 

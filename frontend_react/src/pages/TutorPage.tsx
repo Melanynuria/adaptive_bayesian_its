@@ -2,12 +2,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendLogs } from "../api/logApi";
 import { raiseHand } from "../api/sessionApi";
+import { getClassStatus } from "../api/classroomApi";
 import type { CTATMessage } from "../types/ctat";
+
+const FINAL_ASSESSMENT_IDS = ["level1Easy_v5", "level2Easy_v5", "level3Easy_v5"];
 
 type LocationState = {
   sessionId: string;
   problemIds: string[];
   classCode: string;
+  isFinalAssessment?: boolean;
 };
 
 const MOTIVATIONAL_MESSAGES = [
@@ -45,6 +49,8 @@ export default function TutorPage() {
   const [toast, setToast] = useState<{ message: string; top: string; left: string } | null>(null);
   const [handEnabled, setHandEnabled] = useState(false);
   const [handRaised, setHandRaised]   = useState(false);
+  const [sessionEnded, setSessionEnded] = useState(false);
+  const isFinalAssessment = st?.isFinalAssessment ?? false;
 
   const bufferRef       = useRef<CTATMessage[]>([]);
   const flushTimerRef   = useRef<number | null>(null);
@@ -79,6 +85,18 @@ export default function TutorPage() {
   useEffect(() => {
     if (!st?.sessionId || !st?.problemIds?.length) nav("/");
   }, [st, nav]);
+
+  // Poll class status every 10 s — show the final-assessment button when teacher ends session
+  useEffect(() => {
+    if (!st?.classCode || isFinalAssessment) return;
+    const id = setInterval(async () => {
+      try {
+        const { ended } = await getClassStatus(st.classCode);
+        if (ended) setSessionEnded(true);
+      } catch { /* silent */ }
+    }, 10_000);
+    return () => clearInterval(id);
+  }, [st?.classCode, isFinalAssessment]);
 
   // Show a random motivational message at a random screen position for 4 s.
   // top:  10–70 vh  (keeps the box away from the very top and bottom)
@@ -142,10 +160,25 @@ export default function TutorPage() {
       if (pending.length && sessionId) {
         try { await sendLogs(sessionId, pending); } catch {}
       }
-      nav("/waiting", { state: { sessionId, classCode: st?.classCode } });
+      if (isFinalAssessment) {
+        nav("/end", { state: { sessionId } });
+      } else {
+        nav("/waiting", { state: { sessionId, classCode: st?.classCode } });
+      }
     } else {
       setIdx(idx + 1);
     }
+  }
+
+  function handleStartFinalAssessment() {
+    nav("/tutor", {
+      state: {
+        sessionId,
+        problemIds: FINAL_ASSESSMENT_IDS,
+        classCode: st?.classCode,
+        isFinalAssessment: true,
+      },
+    });
   }
 
   useEffect(() => {
@@ -278,6 +311,29 @@ export default function TutorPage() {
       >
         <span><strong>Problema:</strong> {currentProblemId}</span>
         <span><strong>Exercici:</strong> {idx + 1} / {queue.length}</span>
+
+        {/* Session-ended banner */}
+        {sessionEnded && (
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10,
+            padding: "6px 14px", backgroundColor: "#fff3e0",
+            borderRadius: 8, border: "1px solid #ffb74d",
+          }}>
+            <span style={{ fontSize: 13, color: "#e65100", fontWeight: "bold" }}>
+              El professor ha finalitzat la sessió
+            </span>
+            <button
+              onClick={handleStartFinalAssessment}
+              style={{
+                padding: "5px 12px", backgroundColor: "#e65100",
+                color: "white", border: "none", borderRadius: 6,
+                cursor: "pointer", fontSize: 12, fontWeight: "bold",
+              }}
+            >
+              Fer prova final
+            </button>
+          </div>
+        )}
 
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
           {/* Hand button — enabled after 3 attempts on the same step */}

@@ -2,12 +2,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { startSession } from "../api/sessionApi";
 
+const TEACHER_KEY = "Solve2Learn";
+
 export default function StartSessionPage() {
   const nav = useNavigate();
   const [classCode, setClassCode] = useState("");
   const [studentId, setStudentId] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError]   = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const [showTeacherPrompt, setShowTeacherPrompt] = useState(false);
+  const [teacherKey, setTeacherKey]               = useState("");
+  const [keyError, setKeyError]                   = useState(false);
+
+  function onTeacherAccess() {
+    if (teacherKey === TEACHER_KEY) {
+      nav("/teacher");
+    } else {
+      setKeyError(true);
+      setTeacherKey("");
+    }
+  }
 
   async function onStart() {
     setError(null);
@@ -94,6 +109,70 @@ export default function StartSessionPage() {
         >
           {loading ? "Carregant…" : "Iniciar"}
         </button>
+
+        {/* Teacher access */}
+        <div style={{ textAlign: "center", marginTop: 28 }}>
+          {!showTeacherPrompt ? (
+            <button
+              onClick={() => { setShowTeacherPrompt(true); setKeyError(false); setTeacherKey(""); }}
+              style={{
+                background: "none", border: "none", color: "#999",
+                fontSize: 12, cursor: "pointer", textDecoration: "underline",
+              }}
+            >
+              Accés professor
+            </button>
+          ) : (
+            <div style={{
+              marginTop: 4, padding: "14px 16px",
+              backgroundColor: "#f5f5f5", borderRadius: 8,
+              border: "1px solid #ddd",
+            }}>
+              <p style={{ margin: "0 0 10px", fontSize: 13, color: "#555" }}>
+                Introdueix la clau d'accés
+              </p>
+              <div style={{ display: "flex", gap: 8 }}>
+                <input
+                  type="password"
+                  value={teacherKey}
+                  onChange={(e) => { setTeacherKey(e.target.value); setKeyError(false); }}
+                  onKeyDown={(e) => { if (e.key === "Enter") onTeacherAccess(); }}
+                  placeholder="Clau…"
+                  autoFocus
+                  style={{
+                    flex: 1, padding: "8px 10px", fontSize: 13,
+                    borderRadius: 6, border: `1px solid ${keyError ? "crimson" : "#ccc"}`,
+                  }}
+                />
+                <button
+                  onClick={onTeacherAccess}
+                  style={{
+                    padding: "8px 14px", backgroundColor: "#1565C0",
+                    color: "white", border: "none", borderRadius: 6,
+                    cursor: "pointer", fontSize: 13, fontWeight: "bold",
+                  }}
+                >
+                  Entrar
+                </button>
+                <button
+                  onClick={() => setShowTeacherPrompt(false)}
+                  style={{
+                    padding: "8px 10px", backgroundColor: "#eee",
+                    border: "1px solid #ccc", borderRadius: 6,
+                    cursor: "pointer", fontSize: 13, color: "#555",
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+              {keyError && (
+                <p style={{ color: "crimson", fontSize: 12, marginTop: 8, marginBottom: 0 }}>
+                  Clau incorrecta.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

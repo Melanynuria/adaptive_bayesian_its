@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAssignment } from "../api/sessionApi";
+import { getClassStatus } from "../api/classroomApi";
+
+const FINAL_ASSESSMENT_IDS = ["level1Easy_v5", "level2Easy_v5", "level3Easy_v5"];
 
 type LocationState = {
   sessionId: string;
@@ -18,10 +21,9 @@ export default function WaitingPage() {
   const nav = useNavigate();
   const st  = loc.state as LocationState | null;
 
-  const [dots, setDots]       = useState(".");
-  const [assigned, setAssigned] = useState<{
-    level: string; difficulty: string;
-  } | null>(null);
+  const [dots, setDots]         = useState(".");
+  const [assigned, setAssigned] = useState<{ level: string; difficulty: string } | null>(null);
+  const [sessionEnded, setSessionEnded] = useState(false);
 
   // Animated dots while waiting
   useEffect(() => {
@@ -31,6 +33,18 @@ export default function WaitingPage() {
     );
     return () => clearInterval(id);
   }, []);
+
+  // Poll class status every 10 s for session end
+  useEffect(() => {
+    if (!st?.classCode) return;
+    const id = setInterval(async () => {
+      try {
+        const { ended } = await getClassStatus(st.classCode);
+        if (ended) setSessionEnded(true);
+      } catch { /* silent */ }
+    }, 10_000);
+    return () => clearInterval(id);
+  }, [st?.classCode]);
 
   // Poll every 3 s for the personalised assignment
   useEffect(() => {
@@ -93,7 +107,34 @@ export default function WaitingPage() {
           width: "90%",
         }}
       >
-        {!assigned ? (
+        {sessionEnded ? (
+          <>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>📝</div>
+            <h2 style={{ marginBottom: 12, color: "#e65100" }}>
+              El professor ha finalitzat la sessió
+            </h2>
+            <p style={{ color: "#555", fontSize: 15, marginBottom: 20 }}>
+              És hora de fer la prova final per veure tot el que has après!
+            </p>
+            <button
+              onClick={() => nav("/tutor", {
+                state: {
+                  sessionId: st!.sessionId,
+                  problemIds: FINAL_ASSESSMENT_IDS,
+                  classCode: st!.classCode,
+                  isFinalAssessment: true,
+                },
+              })}
+              style={{
+                padding: "12px 28px", backgroundColor: "#e65100",
+                color: "white", border: "none", borderRadius: 8,
+                cursor: "pointer", fontSize: 15, fontWeight: "bold",
+              }}
+            >
+              Fer la prova final
+            </button>
+          </>
+        ) : !assigned ? (
           <>
             <Spinner />
             <h2 style={{ marginBottom: 12, marginTop: 20, color: "#1a1a2e" }}>

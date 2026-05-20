@@ -20,3 +20,11 @@ export async function getAssignment(session_id: string) {
 export async function raiseHand(session_id: string) {
   await api.post(`/api/session/${session_id}/raise-hand`);
 }
+
+export async function getResults(session_id: string) {
+  const res = await api.get(`/api/session/${session_id}/results`);
+  return res.data as {
+    initial_states: Record<string, number>;
+    final_states:   Record<string, number>;
+  };
+}
