@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { startClass, getProgress, endClass, downloadReport } from "../api/classroomApi";
+import { startClass, getProgress, endClass, downloadReport, toggleMessages } from "../api/classroomApi";
 
 type StudentProgress = {
   student_id: string;
@@ -48,6 +48,7 @@ export default function TeacherPage() {
   const [confirmEnd, setConfirmEnd]           = useState(false);
   const [sessionEnded, setSessionEnded]       = useState(false);
   const [downloading, setDownloading]         = useState(false);
+  const [messagesEnabled, setMessagesEnabled]  = useState(true);
 
   useEffect(() => {
     if (!activeClass) return;
@@ -73,6 +74,16 @@ export default function TeacherPage() {
       await endClass(activeClass);
       setSessionEnded(true);
       setConfirmEnd(false);
+    } catch {
+      // best-effort
+    }
+  }
+
+  async function onToggleMessages() {
+    if (!activeClass) return;
+    try {
+      const result = await toggleMessages(activeClass);
+      setMessagesEnabled(result.messages_enabled);
     } catch {
       // best-effort
     }
@@ -166,7 +177,7 @@ export default function TeacherPage() {
             }} />
             {sessionEnded && (
               <span style={{ fontSize: 13, color: "#c62828", fontWeight: "bold" }}>
-                Sessió finalitzada — els alumnes veuen la prova final
+                Sessió finalitzada — els alumnes poden consultar els resultats
               </span>
             )}
             {lastUpdate && (
@@ -174,17 +185,31 @@ export default function TeacherPage() {
                 Actualitzat: {lastUpdate.toLocaleTimeString()}
               </span>
             )}
+            {/* A/B messages toggle */}
+            <button
+              onClick={onToggleMessages}
+              title={messagesEnabled ? "Clic per desactivar els missatges motivacionals" : "Clic per activar els missatges motivacionals"}
+              style={{
+                padding: "6px 14px",
+                backgroundColor: messagesEnabled ? "#2e7d32" : "#757575",
+                color: "white", border: "none", borderRadius: 6,
+                cursor: "pointer", fontSize: 12, fontWeight: "bold",
+              }}
+            >
+              {messagesEnabled ? "Missatges: ON" : "Missatges: OFF"}
+            </button>
+
             <button
               onClick={onDownloadReport}
-              disabled={downloading || students.length === 0}
-              title="Descarrega el informe Excel de la classe"
+              disabled={downloading || !sessionEnded}
+              title={sessionEnded ? "Descarrega el informe Excel de la classe" : "Disponible un cop finalitzada la sessió"}
               style={{
                 marginLeft: "auto",
                 padding: "6px 14px", backgroundColor: "#1565C0",
                 color: "white", border: "none", borderRadius: 6,
-                cursor: (downloading || students.length === 0) ? "not-allowed" : "pointer",
+                cursor: (downloading || !sessionEnded) ? "not-allowed" : "pointer",
                 fontSize: 12, fontWeight: "bold",
-                opacity: (downloading || students.length === 0) ? 0.5 : 1,
+                opacity: (downloading || !sessionEnded) ? 0.5 : 1,
               }}
             >
               {downloading ? "Descarregant…" : "⬇ Informe Excel"}

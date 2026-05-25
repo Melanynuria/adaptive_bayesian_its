@@ -14,7 +14,7 @@ export async function getAssignment(session_id: string) {
   const res = await api.get(`/api/session/${session_id}/assignment`);
   return res.data as
     | { ready: false }
-    | { ready: true; level: string; difficulty: string; problem_ids: string[] };
+    | { ready: true; level: string; difficulty: string; problem_ids: string[]; mastery: boolean };
 }
 
 export async function raiseHand(session_id: string) {
@@ -24,7 +24,8 @@ export async function raiseHand(session_id: string) {
 export async function getResults(session_id: string) {
   const res = await api.get(`/api/session/${session_id}/results`);
   return res.data as {
-    initial_states: Record<string, number>;
-    final_states:   Record<string, number>;
+    initial_states:           Record<string, number>;
+    final_states:             Record<string, number>;
+    normalized_learning_gain: Record<string, number>;
   };
 }

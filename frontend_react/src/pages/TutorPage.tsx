@@ -5,13 +5,10 @@ import { raiseHand } from "../api/sessionApi";
 import { getClassStatus } from "../api/classroomApi";
 import type { CTATMessage } from "../types/ctat";
 
-const FINAL_ASSESSMENT_IDS = ["level1Difficult_v5", "level2Difficult_v5", "level3Difficult_v5"];
-
 type LocationState = {
   sessionId: string;
   problemIds: string[];
   classCode: string;
-  isFinalAssessment?: boolean;
 };
 
 const MOTIVATIONAL_MESSAGES = [
@@ -43,15 +40,14 @@ export default function TutorPage() {
   const st = loc.state as LocationState | null;
 
   const [sessionId] = useState(st?.sessionId ?? "");
-  const [queue, setQueue] = useState<string[]>(st?.problemIds ?? []);
+  const [queue] = useState<string[]>(st?.problemIds ?? []);
   const [idx, setIdx] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [toast, setToast] = useState<{ message: string; top: string; left: string } | null>(null);
   const [handEnabled, setHandEnabled] = useState(false);
   const [handRaised, setHandRaised]   = useState(false);
   const [sessionEnded, setSessionEnded] = useState(false);
-  const [confirmFinal, setConfirmFinal] = useState(false);
-  const [isFinalAssessment, setIsFinalAssessment] = useState(st?.isFinalAssessment ?? false);
+  const [messagesEnabled, setMessagesEnabled] = useState(true);
 
   const bufferRef       = useRef<CTATMessage[]>([]);
   const flushTimerRef   = useRef<number | null>(null);
@@ -87,17 +83,20 @@ export default function TutorPage() {
     if (!st?.sessionId || !st?.problemIds?.length) nav("/");
   }, [st, nav]);
 
-  // Poll class status every 10 s — show the final-assessment button when teacher ends session
+  // Fetch class status on mount (for initial messagesEnabled) and poll every 10 s
   useEffect(() => {
-    if (!st?.classCode || isFinalAssessment) return;
-    const id = setInterval(async () => {
+    if (!st?.classCode) return;
+    async function fetchStatus() {
       try {
-        const { ended } = await getClassStatus(st.classCode);
-        if (ended) setSessionEnded(true);
+        const status = await getClassStatus(st!.classCode);
+        if (status.ended) setSessionEnded(true);
+        setMessagesEnabled(status.messages_enabled);
       } catch { /* silent */ }
-    }, 10_000);
+    }
+    fetchStatus();
+    const id = setInterval(fetchStatus, 10_000);
     return () => clearInterval(id);
-  }, [st?.classCode, isFinalAssessment]);
+  }, [st?.classCode]);
 
   // Show a random motivational message at a random screen position for 4 s.
   // top:  10–70 vh  (keeps the box away from the very top and bottom)
@@ -115,23 +114,28 @@ export default function TutorPage() {
     }, 4000);
   }
 
-  // Debounce log uploads: wait 700 ms after the last event before sending.
-  // If the POST fails (e.g. network hiccup) the events are pushed back to the
-  // front of the buffer so they are retried on the next flush.
+  // Cancel the pending debounce timer and immediately send all buffered events.
+  // If the POST fails the events are pushed back so the next flush retries them.
+  async function flushBuffer() {
+    if (flushTimerRef.current !== null) {
+      window.clearTimeout(flushTimerRef.current);
+      flushTimerRef.current = null;
+    }
+    const events = bufferRef.current.splice(0);
+    if (!events.length || !sessionId) return;
+    try {
+      await sendLogs(sessionId, events);
+    } catch {
+      bufferRef.current.unshift(...events);
+    }
+  }
+
+  // Schedule a debounced flush for routine log events (attempts, hints).
   function scheduleFlush() {
     if (flushTimerRef.current !== null) return;
-
-    flushTimerRef.current = window.setTimeout(async () => {
+    flushTimerRef.current = window.setTimeout(() => {
       flushTimerRef.current = null;
-
-      const events = bufferRef.current.splice(0);
-      if (!events.length || !sessionId) return;
-
-      try {
-        await sendLogs(sessionId, events);
-      } catch {
-        bufferRef.current.unshift(...events);
-      }
+      flushBuffer();
     }, 700);
   }
 
@@ -153,15 +157,8 @@ export default function TutorPage() {
   async function handleNext() {
     if (!isDone) return;
     if (isLastProblem) {
-      if (flushTimerRef.current !== null) {
-        window.clearTimeout(flushTimerRef.current);
-        flushTimerRef.current = null;
-      }
-      const pending = bufferRef.current.splice(0);
-      if (pending.length && sessionId) {
-        try { await sendLogs(sessionId, pending); } catch {}
-      }
-      if (isFinalAssessment) {
+      await flushBuffer();
+      if (sessionEnded) {
         nav("/end", { state: { sessionId } });
       } else {
         nav("/waiting", { state: { sessionId, classCode: st?.classCode } });
@@ -169,28 +166,6 @@ export default function TutorPage() {
     } else {
       setIdx(idx + 1);
     }
-  }
-
-  function handleStartFinalAssessment() {
-    // Cancel any pending log flush and clear the buffer so stale events
-    // from the interrupted exercise don't interfere with the final assessment.
-    if (flushTimerRef.current !== null) {
-      window.clearTimeout(flushTimerRef.current);
-      flushTimerRef.current = null;
-    }
-    bufferRef.current = [];
-
-    // Reset all per-problem state and switch the queue in-place.
-    // Navigating /tutor → /tutor does NOT remount the component, so we must
-    // update state directly instead of calling nav().
-    stepAttemptsRef.current = {};
-    setQueue(FINAL_ASSESSMENT_IDS);
-    setIdx(0);
-    setIsDone(false);
-    setHandEnabled(false);
-    setHandRaised(false);
-    setIsFinalAssessment(true);
-    setConfirmFinal(false);
   }
 
   useEffect(() => {
@@ -270,7 +245,7 @@ export default function TutorPage() {
           }
         }
 
-        if (xml.includes("INCORRECT")) showToast();
+        if (xml.includes("INCORRECT") && messagesEnabled) showToast();
 
         bufferRef.current.push(enriched);
         scheduleFlush();
@@ -285,9 +260,10 @@ export default function TutorPage() {
           ts: new Date().toISOString(),
           payload: { problemId: currentProblemId },
         });
-        scheduleFlush();
+        // Flush immediately (not debounced) so the completion event reaches the
+        // backend before the student can click Next and navigate away.
+        flushBuffer();
 
-        // Unlock the next button — student must click it to proceed
         setIsDone(true);
       }
     }
@@ -327,23 +303,12 @@ export default function TutorPage() {
         {/* Session-ended banner */}
         {sessionEnded && (
           <div style={{
-            display: "flex", alignItems: "center", gap: 10,
             padding: "6px 14px", backgroundColor: "#fff3e0",
             borderRadius: 8, border: "1px solid #ffb74d",
           }}>
             <span style={{ fontSize: 13, color: "#e65100", fontWeight: "bold" }}>
-              El professor ha finalitzat la sessió
+              El professor ha finalitzat la sessió — Acaba l'exercici actual
             </span>
-            <button
-              onClick={() => setConfirmFinal(true)}
-              style={{
-                padding: "5px 12px", backgroundColor: "#e65100",
-                color: "white", border: "none", borderRadius: 6,
-                cursor: "pointer", fontSize: 12, fontWeight: "bold",
-              }}
-            >
-              Fer prova final
-            </button>
           </div>
         )}
 
@@ -454,53 +419,6 @@ export default function TutorPage() {
         />
       </div>
 
-      {/* Final-assessment confirmation modal */}
-      {confirmFinal && (
-        <div style={{
-          position: "fixed", inset: 0,
-          backgroundColor: "rgba(0,0,0,0.5)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 10000,
-        }}>
-          <div style={{
-            backgroundColor: "white", borderRadius: 16,
-            padding: "40px 48px", maxWidth: 460, width: "90%",
-            textAlign: "center", boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
-          }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>📝</div>
-            <h2 style={{ marginBottom: 10, color: "#1a1a2e", fontFamily: "Verdana" }}>
-              Estàs preparat per fer la prova final?
-            </h2>
-            <p style={{ color: "#666", fontSize: 14, marginBottom: 28, fontFamily: "Verdana", lineHeight: 1.6 }}>
-              Es mostraran 3 exercicis per comprovar el teu progrés.<br />
-              Un cop comencis no es pot pausar.
-            </p>
-            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-              <button
-                onClick={handleStartFinalAssessment}
-                style={{
-                  padding: "12px 28px", backgroundColor: "#2e7d32",
-                  color: "white", border: "none", borderRadius: 8,
-                  cursor: "pointer", fontSize: 15, fontWeight: "bold",
-                  fontFamily: "Verdana",
-                }}
-              >
-                Sí, comencem!
-              </button>
-              <button
-                onClick={() => setConfirmFinal(false)}
-                style={{
-                  padding: "12px 20px", backgroundColor: "#f5f5f5",
-                  color: "#555", border: "1px solid #ddd", borderRadius: 8,
-                  cursor: "pointer", fontSize: 14, fontFamily: "Verdana",
-                }}
-              >
-                No encara
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

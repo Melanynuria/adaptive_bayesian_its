@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import StreamingResponse, FileResponse, JSONResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Any, Dict, List, Optional, Set, Tuple
 from pathlib import Path
+import io
 import re
 import uuid
 import random
@@ -82,9 +83,8 @@ BKT_PARAMS: Dict[str, Dict[str, float]] = {
 # -----------------------------------
 
 STRUGGLE_THRESHOLD   = 0.40   # below → remedial + Easy
-MASTERY_THRESHOLD    = 0.80   # skip threshold for single-KC levels; difficulty boundary
-LEVEL_SKIP_THRESHOLD = 0.85   # if ≥ N_LEVEL_SKIP_COUNT individual KCs exceed this, skip the level
-N_LEVEL_SKIP_COUNT   = 2      # KCs above LEVEL_SKIP_THRESHOLD required to skip a multi-KC level
+MASTERY_THRESHOLD    = 0.80   # avg P(L) threshold to skip a level and advance; difficulty boundary
+LEVEL_SKIP_THRESHOLD = 0.85   # stricter per-KC threshold used only for the full-mastery flag
 N_ASSIGNED           = 4      # non-remedial exercises per round (N_REGULAR + N_BONUS)
 N_REGULAR            = 3      # targeted exercises in regular block
 N_BONUS              = 1      # random Medium/Difficult exercise appended to every round
@@ -105,14 +105,19 @@ KC_TO_LEVEL: Dict[str, str] = {
     for kc in kcs
 }
 
+# Both move_constants and remove_coefficient must be sufficiently mastered
+# before level-2 KCs (combine_like_terms, normalize_negative_sign) are targeted.
+PREREQUISITES: Dict[str, List[str]] = {
+    "combine_like_terms":      ["move_constants", "remove_coefficient"],
+    "normalize_negative_sign": ["move_constants", "remove_coefficient"],
+}
+PREREQ_THRESHOLD = 0.50
+
 # Exercises already used in the diagnostic phase — never reassigned
 DIAGNOSTIC_EXERCISES = {"level1Difficult_v1", "level2Difficult_v1", "level3Difficult_v1"}
 
-# Final assessment exercises — reserved for the post-session evaluation, never in regular pool
-FINAL_EXERCISES = {"level1Difficult_v5", "level2Difficult_v5", "level3Difficult_v5"}
-
 # All exercises that must never appear in personalised rounds
-_EXCLUDED_FROM_POOL = DIAGNOSTIC_EXERCISES | FINAL_EXERCISES
+_EXCLUDED_FROM_POOL = DIAGNOSTIC_EXERCISES
 
 
 def _natural_key(s: str) -> list:
@@ -181,6 +186,14 @@ def _build_kc_exercise_map() -> Dict[Tuple[str, str, str], List[str]]:
 KC_EXERCISE_MAP: Dict[Tuple[str, str, str], List[str]] = _build_kc_exercise_map()
 
 
+def _prerequisites_met(kc: str, knowledge_states: Dict[str, float]) -> bool:
+    """Return True if all prerequisite KCs for the given KC meet PREREQ_THRESHOLD."""
+    return all(
+        knowledge_states.get(prereq, 0) >= PREREQ_THRESHOLD
+        for prereq in PREREQUISITES.get(kc, [])
+    )
+
+
 def select_exercises(
     knowledge_states: Dict[str, float],
     used_ids: Optional[List[str]] = None,
@@ -194,10 +207,9 @@ def select_exercises(
       Collect Easy exercises for every struggling KC, shuffle, take N_REMEDIAL.
 
     REGULAR block (N_REGULAR = 3 exercises):
-      Determine the student's working level using a two-condition skip rule —
-      a level is skipped when ≥ N_LEVEL_SKIP_COUNT (2) individual KCs exceed
-      LEVEL_SKIP_THRESHOLD (0.85), OR when the level has fewer than 2 KCs and the
-      average meets MASTERY_THRESHOLD (0.80).  Difficulty: Easy if avg < STRUGGLE,
+      Determine the student's working level: walk level1 → level2 → level3 and
+      skip a level when its average P(L) ≥ MASTERY_THRESHOLD (0.80).  The first
+      non-skipped level is the working level.  Difficulty: Easy if avg < STRUGGLE,
       Difficult if avg ≥ MASTERY but level not yet skipped, Medium otherwise.
 
     BONUS block (N_BONUS = 1 exercise):
@@ -214,6 +226,8 @@ def select_exercises(
     for kc, score in knowledge_states.items():
         if score >= STRUGGLE_THRESHOLD:
             continue
+        if not _prerequisites_met(kc, knowledge_states):
+            continue  # prerequisites not yet met; regular block will address those first
         kc_level = KC_TO_LEVEL.get(kc)
         if not kc_level:
             continue
@@ -246,10 +260,7 @@ def select_exercises(
         scores = {kc: knowledge_states[kc] for kc in kcs}
         avg    = sum(scores.values()) / len(scores)
 
-        # Skip level if ≥ N_LEVEL_SKIP_COUNT individual KCs exceed LEVEL_SKIP_THRESHOLD,
-        # or (for single-KC levels) fall back to average-based mastery check.
-        n_above_skip = sum(1 for v in scores.values() if v > LEVEL_SKIP_THRESHOLD)
-        if n_above_skip >= N_LEVEL_SKIP_COUNT or (len(kcs) < N_LEVEL_SKIP_COUNT and avg >= MASTERY_THRESHOLD):
+        if avg >= MASTERY_THRESHOLD:
             continue  # level mastered → check next
 
         if avg < STRUGGLE_THRESHOLD:
@@ -365,6 +376,47 @@ def compute_knowledge_states(session_id: str, db_path: Path) -> Dict[str, float]
     return states
 
 
+def compute_knowledge_states_with_trace(
+    session_id: str, db_path: Path
+) -> Tuple[Dict[str, float], List[Dict]]:
+    """
+    Same as compute_knowledge_states but also returns the full BKT trajectory.
+
+    The trace is one entry per update step with the timestamp, which KC was updated,
+    the observation, and the resulting P(L) for all KCs at that point.
+    Used for plotting per-student learning curves and research analysis.
+    """
+    conn = sqlite3.connect(db_path, timeout=10)
+    rows = conn.execute("""
+        SELECT kc, correctness, hint_per_step, timestamp
+        FROM   steps
+        WHERE  session_id = ? AND kc IS NOT NULL AND correctness IS NOT NULL
+        ORDER  BY timestamp ASC
+    """, (session_id,)).fetchall()
+    conn.close()
+
+    states = {kc: p["p0"] for kc, p in BKT_PARAMS.items()}
+    trace: List[Dict] = []
+    for i, (kc, correctness, hint_per_step, ts) in enumerate(rows):
+        if kc not in BKT_PARAMS:
+            continue
+        correct = (correctness == "CORRECT") and (not hint_per_step)
+        states[kc] = bkt_update(states[kc], correct, BKT_PARAMS[kc])
+        trace.append({
+            "step_idx":                       i,
+            "timestamp":                      ts,
+            "kc_updated":                     kc,
+            "correctness":                    correctness,
+            "hint_per_step":                  hint_per_step,
+            "p_move_constants":               round(states.get("move_constants", 0), 4),
+            "p_remove_coefficient":           round(states.get("remove_coefficient", 0), 4),
+            "p_combine_like_terms":           round(states.get("combine_like_terms", 0), 4),
+            "p_normalize_negative_sign":      round(states.get("normalize_negative_sign", 0), 4),
+            "p_expand_eliminate_parentheses": round(states.get("expand_eliminate_parentheses", 0), 4),
+        })
+    return states, trace
+
+
 # -----------------------------------
 # POST-DIAGNOSTIC PROCESSING
 # (runs in background after N_FIRST_EXERCISES done)
@@ -390,25 +442,64 @@ def process_completed_session(
     round_label = "diagnostics" if report_phase == 1 else f"personalized round {report_phase - 1}"
     print(f"[BKT] Processing after {round_label}  session={session_id[:8]}  class={class_code}")
 
-    # 1. BKT over all attempts so far
-    knowledge_states = compute_knowledge_states(session_id, db_path)
+    # 1. BKT over all attempts so far (with full trajectory for research logging)
+    knowledge_states, bkt_trace = compute_knowledge_states_with_trace(session_id, db_path)
     print(f"[BKT] States: { {k: round(v,3) for k,v in knowledge_states.items()} }")
 
     # 2. Select next personalised exercise set (excluding already-used IDs)
     problem_ids, level, difficulty = select_exercises(knowledge_states, used_ids)
+
+    all_mastered = all(
+        knowledge_states.get(kc, 0) >= LEVEL_SKIP_THRESHOLD for kc in BKT_PARAMS
+    )
+    if all_mastered:
+        print(f"[BKT] MASTERY ACHIEVED  session={session_id[:8]}")
     print(f"[BKT] Assignment → {level} {difficulty}: {problem_ids}")
 
-    # 3. Store (or overwrite) in assignments table
+    # 3. Store assignment (with mastery flag) and BKT trace
     conn = sqlite3.connect(db_path, timeout=10)
+    # Ensure bkt_trace table exists for DBs created before this schema version
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS bkt_trace (
+            session_id                     TEXT,
+            phase                          INTEGER,
+            step_idx                       INTEGER,
+            timestamp                      TEXT,
+            kc_updated                     TEXT,
+            correctness                    TEXT,
+            hint_per_step                  INTEGER,
+            p_move_constants               REAL,
+            p_remove_coefficient           REAL,
+            p_combine_like_terms           REAL,
+            p_normalize_negative_sign      REAL,
+            p_expand_eliminate_parentheses REAL
+        )
+    """)
     conn.execute("""
         INSERT OR REPLACE INTO assignments
-            (session_id, class_code, level, difficulty, problem_ids, assigned_at)
-        VALUES (?, ?, ?, ?, ?, ?)
+            (session_id, class_code, level, difficulty, problem_ids, assigned_at, mastery)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (
         session_id, class_code, level, difficulty,
         json.dumps(problem_ids),
         datetime.now(timezone.utc).isoformat(),
+        1 if all_mastered else 0,
     ))
+    for entry in bkt_trace:
+        conn.execute("""
+            INSERT INTO bkt_trace
+                (session_id, phase, step_idx, timestamp, kc_updated,
+                 correctness, hint_per_step,
+                 p_move_constants, p_remove_coefficient, p_combine_like_terms,
+                 p_normalize_negative_sign, p_expand_eliminate_parentheses)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            session_id, report_phase, entry["step_idx"], entry["timestamp"],
+            entry["kc_updated"], entry["correctness"], entry["hint_per_step"],
+            entry["p_move_constants"], entry["p_remove_coefficient"],
+            entry["p_combine_like_terms"], entry["p_normalize_negative_sign"],
+            entry["p_expand_eliminate_parentheses"],
+        ))
     conn.commit()
     conn.close()
 
@@ -774,9 +865,7 @@ def create_class_db(class_code: str) -> Path:
 
     Layout inside CLASSES_DIR:
         {class_code}_{HHhMM_DD-MM-YYYY}/
-            {class_code}_{HHhMM_DD-MM-YYYY}.db   ← main class DB
-            first_analysis.db                     ← diagnostic steps (all students)
-            final_analysis.db                     ← final-assessment steps (all students)
+            {class_code}_{HHhMM_DD-MM-YYYY}.db   ← main class DB (includes first_analysis table)
             students/                             ← one DB per student, created on join
     """
     ts = datetime.now()
@@ -806,15 +895,39 @@ def create_class_db(class_code: str) -> Path:
             level        TEXT,
             difficulty   TEXT,
             problem_ids  TEXT,
-            assigned_at  TEXT
+            assigned_at  TEXT,
+            mastery      INTEGER NOT NULL DEFAULT 0
+        );
+        CREATE TABLE IF NOT EXISTS bkt_trace (
+            session_id                     TEXT,
+            phase                          INTEGER,
+            step_idx                       INTEGER,
+            timestamp                      TEXT,
+            kc_updated                     TEXT,
+            correctness                    TEXT,
+            hint_per_step                  INTEGER,
+            p_move_constants               REAL,
+            p_remove_coefficient           REAL,
+            p_combine_like_terms           REAL,
+            p_normalize_negative_sign      REAL,
+            p_expand_eliminate_parentheses REAL
+        );
+        CREATE TABLE IF NOT EXISTS first_analysis (
+            session_id    TEXT,
+            class_code    TEXT,
+            problem_id    TEXT,
+            step_name     TEXT,
+            kc            TEXT,
+            hint_per_step INTEGER,
+            selection     TEXT,
+            action        TEXT,
+            input         TEXT,
+            correctness   TEXT,
+            timestamp     TEXT
         );
     """ + _STEPS_DDL)
     conn.commit()
     conn.close()
-
-    # Analysis DBs — steps only
-    _init_steps_db(class_folder / "first_analysis.db")
-    _init_steps_db(class_folder / "final_analysis.db")
 
     print(f"[CLASS DB] folder={folder_name}")
     return db_path
@@ -856,6 +969,7 @@ SESSIONS: Dict[str, Dict[str, Any]] = {}
 CLASS_STREAMS: Dict[str, List[asyncio.Queue]] = {}
 CLASS_ASSIGNMENTS: Dict[str, str] = {}
 ENDED_CLASSES: Set[str] = set()  # class_codes for which the teacher has ended the session
+CLASS_MESSAGES_ENABLED: Dict[str, bool] = {}  # class_code → messages enabled flag (A/B test)
 
 N_FIRST_EXERCISES = 3
 
@@ -904,6 +1018,7 @@ def start_class(class_code: str):
     """
     db_path = create_class_db(class_code)
     ACTIVE_CLASSES[class_code] = db_path
+    CLASS_MESSAGES_ENABLED[class_code] = True
     print(f"[CLASS STARTED] {class_code}  →  {db_path.name}")
     return {"status": "started", "class_code": class_code, "db": db_path.name}
 
@@ -988,14 +1103,11 @@ async def logs(req: LogsRequest):
     session_meta = SESSIONS.get(req.session_id, {})
     hints_seen: Dict[str, set] = session_meta.get("hints_seen", {})
 
-    class_folder = db_path.parent
     student_db_path = Path(session_meta["student_db_path"]) if session_meta.get("student_db_path") else None
 
     conn        = sqlite3.connect(db_path, timeout=10)
     cursor      = conn.cursor()
     student_conn = sqlite3.connect(student_db_path, timeout=10) if student_db_path else None
-    first_conn   = sqlite3.connect(class_folder / "first_analysis.db", timeout=10)
-    final_conn   = sqlite3.connect(class_folder / "final_analysis.db", timeout=10)
 
     print(f"\n[LOGS] {len(req.events)} event(s)  session={req.session_id[:8]}  class={class_code}")
 
@@ -1106,17 +1218,18 @@ async def logs(req: LogsRequest):
             # Per-student DB
             if student_conn:
                 student_conn.execute(_step_sql, _step_row)
-            # Analysis DBs
+            # First analysis table (diagnostic exercises only)
             if problem_id in DIAGNOSTIC_EXERCISES:
-                first_conn.execute(_step_sql, _step_row)
-            if problem_id in FINAL_EXERCISES:
-                final_conn.execute(_step_sql, _step_row)
+                cursor.execute("""
+                    INSERT INTO first_analysis
+                        (session_id, class_code, problem_id, step_name,
+                         kc, hint_per_step, selection, action, input, correctness, timestamp)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, _step_row)
 
     conn.commit()
     if student_conn:
         student_conn.commit()
-    first_conn.commit()
-    final_conn.commit()
 
     # ── Trigger BKT + new assignment after every completed exercise round ────
     if trigger_report:
@@ -1132,8 +1245,6 @@ async def logs(req: LogsRequest):
             # Diagnostic round done → first BKT run, phase-1 report
             conn.close()
             if student_conn: student_conn.close()
-            first_conn.close()
-            final_conn.close()
             loop = asyncio.get_running_loop()
             loop.run_in_executor(
                 None, process_completed_session,
@@ -1152,7 +1263,7 @@ async def logs(req: LogsRequest):
             if assignment_row:
                 current_assigned = json.loads(assignment_row[0])
 
-                if len(personalized_done) == len(current_assigned):
+                if set(current_assigned).issubset(set(all_completed_ids)):
                     # Current personalized round finished → clear assignment so
                     # WaitingPage shows the spinner while BKT runs in background.
                     cursor.execute(
@@ -1162,8 +1273,6 @@ async def logs(req: LogsRequest):
                     conn.commit()
                     conn.close()
                     if student_conn: student_conn.close()
-                    first_conn.close()
-                    final_conn.close()
 
                     # report_phase 2+ means "append row to existing file"
                     rounds_done = len(personalized_done) // N_ASSIGNED
@@ -1179,8 +1288,6 @@ async def logs(req: LogsRequest):
 
     conn.close()
     if student_conn: student_conn.close()
-    first_conn.close()
-    final_conn.close()
     return {"status": "saved"}
 
 
@@ -1193,7 +1300,7 @@ def get_assignment(session_id: str):
 
     conn = sqlite3.connect(db_path, timeout=10)
     row  = conn.execute(
-        "SELECT level, difficulty, problem_ids FROM assignments WHERE session_id = ?",
+        "SELECT level, difficulty, problem_ids, mastery FROM assignments WHERE session_id = ?",
         (session_id,),
     ).fetchone()
     conn.close()
@@ -1206,6 +1313,7 @@ def get_assignment(session_id: str):
         "level":       row[0],
         "difficulty":  row[1],
         "problem_ids": json.loads(row[2]),
+        "mastery":     bool(row[3]),
     }
 
 
@@ -1360,19 +1468,168 @@ def classroom_progress(class_code: str):
     )
 
 
+def generate_results_report(class_code: str, db_path: Path) -> Optional[bytes]:
+    """
+    Build a plain Excel with one row per student showing, for each KC:
+      initial P(L) (BKT over diagnostic exercises only),
+      final P(L)   (BKT over all session exercises),
+      delta        (final − initial),
+      NLG          ((final − initial) / (1 − initial)).
+    Returns raw bytes ready to stream, or None if no student has data yet.
+    """
+    try:
+        import openpyxl
+    except ImportError:
+        print("[REPORT] openpyxl not installed — run: pip install openpyxl")
+        raise
+
+    kc_order = list(BKT_PARAMS.keys())
+    kc_short  = {
+        "move_constants":               "MC",
+        "remove_coefficient":           "RC",
+        "combine_like_terms":           "CLT",
+        "expand_eliminate_parentheses": "EEP",
+        "normalize_negative_sign":      "NNS",
+    }
+
+    diag_ids     = tuple(DIAGNOSTIC_EXERCISES)
+    placeholders = ",".join("?" * len(diag_ids))
+
+    conn     = sqlite3.connect(db_path, timeout=10)
+    sessions = conn.execute(
+        "SELECT session_id, student_id FROM sessions WHERE class_code = ?",
+        (class_code,),
+    ).fetchall()
+
+    def _bkt(rows):
+        states = {kc: BKT_PARAMS[kc]["p0"] for kc in BKT_PARAMS}
+        for kc, correctness, hint_per_step, _ in rows:
+            if kc not in BKT_PARAMS:
+                continue
+            correct  = (correctness == "CORRECT") and (not hint_per_step)
+            states[kc] = bkt_update(states[kc], correct, BKT_PARAMS[kc])
+        return {kc: round(v, 3) for kc, v in states.items()}
+
+    report_rows = []
+    for session_id, student_id in sessions:
+        diag_steps = conn.execute(f"""
+            SELECT kc, correctness, hint_per_step, timestamp
+            FROM   steps
+            WHERE  session_id = ? AND kc IS NOT NULL AND correctness IS NOT NULL
+              AND  problem_id IN ({placeholders})
+            ORDER  BY timestamp ASC
+        """, (session_id, *diag_ids)).fetchall()
+
+        all_steps = conn.execute("""
+            SELECT kc, correctness, hint_per_step, timestamp
+            FROM   steps
+            WHERE  session_id = ? AND kc IS NOT NULL AND correctness IS NOT NULL
+            ORDER  BY timestamp ASC
+        """, (session_id,)).fetchall()
+
+        if not all_steps:
+            continue
+
+        initial = _bkt(diag_steps)
+        final   = _bkt(all_steps)
+
+        row = {"student_id": student_id}
+        for kc in kc_order:
+            ini   = initial[kc]
+            fin   = final[kc]
+            delta = round(fin - ini, 3)
+            nlg   = round((fin - ini) / (1.0 - ini), 3) if ini < 1.0 else 1.0
+            row[f"inici_{kc}"]  = ini
+            row[f"final_{kc}"]  = fin
+            row[f"canvi_{kc}"]  = delta
+            row[f"guany_{kc}"]  = nlg
+
+        report_rows.append(row)
+
+    conn.close()
+
+    if not report_rows:
+        return None
+
+    kc_labels = {
+        "move_constants":               "Move constants",
+        "remove_coefficient":           "Remove coefficient",
+        "combine_like_terms":           "Combine like terms",
+        "expand_eliminate_parentheses": "Expand / eliminate parentheses",
+        "normalize_negative_sign":      "Normalize negative sign",
+    }
+
+    wb = openpyxl.Workbook()
+
+    # ── Sheet 1: Summary — one row per student ───────────────────────────────
+    ws_all = wb.active
+    ws_all.title = "Tots els alumnes"
+
+    headers = ["Alumne"]
+    for kc in kc_order:
+        s = kc_short.get(kc, kc)
+        headers += [f"{s} inici", f"{s} final", f"{s} canvi", f"{s} guany norm."]
+
+    for col, h in enumerate(headers, 1):
+        ws_all.cell(row=1, column=col, value=h)
+
+    for ri, row in enumerate(report_rows, 2):
+        ws_all.cell(row=ri, column=1, value=row["student_id"])
+        col = 2
+        for kc in kc_order:
+            ws_all.cell(row=ri, column=col,     value=row[f"inici_{kc}"])
+            ws_all.cell(row=ri, column=col + 1, value=row[f"final_{kc}"])
+            ws_all.cell(row=ri, column=col + 2, value=row[f"canvi_{kc}"])
+            ws_all.cell(row=ri, column=col + 3, value=row[f"guany_{kc}"])
+            col += 4
+
+    # ── Sheets 2…N: one per student ─────────────────────────────────────────
+    for row in report_rows:
+        stu = row["student_id"]
+        # Excel sheet names are limited to 31 characters
+        sheet_name = stu[:31]
+        ws_stu = wb.create_sheet(title=sheet_name)
+
+        # Header row
+        stu_headers = ["Concepte", "Inici (diagnosi)", "Final (prova)", "Canvi", "Guany normalitzat"]
+        for col, h in enumerate(stu_headers, 1):
+            ws_stu.cell(row=1, column=col, value=h)
+
+        # One row per KC
+        for ri, kc in enumerate(kc_order, 2):
+            ws_stu.cell(row=ri, column=1, value=kc_labels.get(kc, kc))
+            ws_stu.cell(row=ri, column=2, value=row[f"inici_{kc}"])
+            ws_stu.cell(row=ri, column=3, value=row[f"final_{kc}"])
+            ws_stu.cell(row=ri, column=4, value=row[f"canvi_{kc}"])
+            ws_stu.cell(row=ri, column=5, value=row[f"guany_{kc}"])
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return buf.read()
+
+
 @app.get("/api/classroom/{class_code}/report")
 def download_report(class_code: str):
-    """Return the most recently generated Excel report for the class as a file download."""
+    """Generate and stream a per-student results Excel (initial/final P(L), delta, NLG)."""
     db_path = ACTIVE_CLASSES.get(class_code)
     if db_path is None:
         raise HTTPException(status_code=404, detail="Class not active.")
-    reports = sorted(db_path.parent.glob(f"report_*_{class_code}.xlsx"))
-    if not reports:
-        raise HTTPException(status_code=404, detail="No report generated yet for this class.")
-    latest = reports[-1]
-    return FileResponse(
-        latest, filename=latest.name,
+
+    try:
+        data = generate_results_report(class_code, db_path)
+    except ImportError:
+        raise HTTPException(status_code=500, detail="openpyxl not installed on the server.")
+
+    if data is None:
+        raise HTTPException(status_code=404, detail="Cap alumne té dades per generar el report.")
+
+    ts       = datetime.now().strftime("%Hh%M_%d-%m-%Y")
+    filename = f"resultats_{class_code}_{ts}.xlsx"
+    return StreamingResponse(
+        io.BytesIO(data),
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
     )
 
 
@@ -1390,10 +1647,21 @@ async def end_class(class_code: str):
     return {"status": "ended", "class_code": class_code}
 
 
+@app.post("/api/classroom/{class_code}/toggle-messages")
+async def toggle_messages(class_code: str):
+    """Teacher endpoint: toggle whether motivational messages are shown to students (A/B test)."""
+    current = CLASS_MESSAGES_ENABLED.get(class_code, True)
+    CLASS_MESSAGES_ENABLED[class_code] = not current
+    return {"messages_enabled": CLASS_MESSAGES_ENABLED[class_code]}
+
+
 @app.get("/api/classroom/{class_code}/status")
 def class_status(class_code: str):
     """Students poll this to find out whether the teacher has ended the session."""
-    return {"ended": class_code in ENDED_CLASSES}
+    return {
+        "ended": class_code in ENDED_CLASSES,
+        "messages_enabled": CLASS_MESSAGES_ENABLED.get(class_code, True),
+    }
 
 
 @app.get("/api/session/{session_id}/results")
@@ -1441,9 +1709,21 @@ def get_results(session_id: str):
             states[kc] = bkt_update(states[kc], correct, BKT_PARAMS[kc])
         return {kc: round(v, 3) for kc, v in states.items()}
 
+    initial = _run(diag_rows)
+    final   = _run(all_rows)
+
+    # Normalized Learning Gain: (post - pre) / (1 - pre)
+    # Undefined when pre = 1.0 (no room to improve); clamped to 1.0 in that case.
+    nlg = {
+        kc: round((final[kc] - initial[kc]) / (1.0 - initial[kc]), 3)
+        if initial[kc] < 1.0 else 1.0
+        for kc in initial
+    }
+
     return {
-        "initial_states": _run(diag_rows),
-        "final_states":   _run(all_rows),
+        "initial_states":           initial,
+        "final_states":             final,
+        "normalized_learning_gain": nlg,
     }
 
 

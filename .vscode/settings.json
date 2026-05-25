@@ -5,6 +5,12 @@
             "driver": "SQLite",
             "database": "backend_fastAPI/app/data/classes/c1_17h59_20-05-2026/c1_17h59_20-05-2026.db",
             "name": "c1"
+        },
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "c11",
+            "database": "backend_fastAPI/app/data/classes/c11_10h24_25-05-2026/c11_10h24_25-05-2026.db"
         }
     ],
     "sqltools.useNodeRuntime": true

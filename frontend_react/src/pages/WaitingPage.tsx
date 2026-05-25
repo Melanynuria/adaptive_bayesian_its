@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getAssignment } from "../api/sessionApi";
 import { getClassStatus } from "../api/classroomApi";
 
-const FINAL_ASSESSMENT_IDS = ["level1Difficult_v5", "level2Difficult_v5", "level3Difficult_v5"];
-
 type LocationState = {
   sessionId: string;
   classCode: string;
@@ -23,8 +21,8 @@ export default function WaitingPage() {
 
   const [dots, setDots]         = useState(".");
   const [assigned, setAssigned] = useState<{ level: string; difficulty: string } | null>(null);
+  const [mastered, setMastered] = useState(false);
   const [sessionEnded, setSessionEnded] = useState(false);
-  const [confirmFinal, setConfirmFinal] = useState(false);
 
   // Animated dots while waiting
   useEffect(() => {
@@ -47,6 +45,12 @@ export default function WaitingPage() {
     return () => clearInterval(id);
   }, [st?.classCode]);
 
+  // Navigate to results when teacher ends the session
+  useEffect(() => {
+    if (!sessionEnded || !st?.sessionId) return;
+    nav("/end", { state: { sessionId: st.sessionId } });
+  }, [sessionEnded, st?.sessionId, nav]);
+
   // Poll every 3 s for the personalised assignment
   useEffect(() => {
     if (!st?.sessionId) return;
@@ -56,6 +60,11 @@ export default function WaitingPage() {
       try {
         const data = await getAssignment(st!.sessionId);
         if (cancelled || !data.ready) return;
+
+        if (data.mastery) {
+          setMastered(true);
+          return;
+        }
 
         setAssigned({ level: data.level, difficulty: data.difficulty });
 
@@ -108,68 +117,18 @@ export default function WaitingPage() {
           width: "90%",
         }}
       >
-        {sessionEnded ? (
+        {mastered ? (
           <>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>📝</div>
-            <h2 style={{ marginBottom: 12, color: "#e65100" }}>
-              El professor ha finalitzat la sessió
+            <div style={{ fontSize: 56, marginBottom: 12 }}>🏆</div>
+            <h2 style={{ marginBottom: 12, color: "#2e7d32" }}>
+              Has dominat tots els conceptes!
             </h2>
-
-            {!confirmFinal ? (
-              <>
-                <p style={{ color: "#555", fontSize: 15, marginBottom: 20 }}>
-                  És hora de fer la prova final per veure tot el que has après!
-                </p>
-                <button
-                  onClick={() => setConfirmFinal(true)}
-                  style={{
-                    padding: "12px 28px", backgroundColor: "#e65100",
-                    color: "white", border: "none", borderRadius: 8,
-                    cursor: "pointer", fontSize: 15, fontWeight: "bold",
-                  }}
-                >
-                  Fer la prova final
-                </button>
-              </>
-            ) : (
-              <>
-                <p style={{ color: "#1a1a2e", fontSize: 16, fontWeight: "bold", marginBottom: 8 }}>
-                  Estàs preparat per fer la prova final?
-                </p>
-                <p style={{ color: "#666", fontSize: 13, marginBottom: 24 }}>
-                  Es mostraran 3 exercicis per comprovar el teu progrés. Un cop comencis no es pot pausar.
-                </p>
-                <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-                  <button
-                    onClick={() => nav("/tutor", {
-                      state: {
-                        sessionId: st!.sessionId,
-                        problemIds: FINAL_ASSESSMENT_IDS,
-                        classCode: st!.classCode,
-                        isFinalAssessment: true,
-                      },
-                    })}
-                    style={{
-                      padding: "12px 28px", backgroundColor: "#2e7d32",
-                      color: "white", border: "none", borderRadius: 8,
-                      cursor: "pointer", fontSize: 15, fontWeight: "bold",
-                    }}
-                  >
-                    Sí, comencem!
-                  </button>
-                  <button
-                    onClick={() => setConfirmFinal(false)}
-                    style={{
-                      padding: "12px 20px", backgroundColor: "#f5f5f5",
-                      color: "#555", border: "1px solid #ddd", borderRadius: 8,
-                      cursor: "pointer", fontSize: 14,
-                    }}
-                  >
-                    No encara
-                  </button>
-                </div>
-              </>
-            )}
+            <p style={{ color: "#555", fontSize: 15, lineHeight: 1.7, marginBottom: 20 }}>
+              Has assolit un nivell alt de domini en tots els conceptes de la sessió. Molt ben fet!
+            </p>
+            <p style={{ color: "#aaa", fontSize: 13 }}>
+              Espera que el professor finalitzi la sessió per veure els resultats.
+            </p>
           </>
         ) : !assigned ? (
           <>

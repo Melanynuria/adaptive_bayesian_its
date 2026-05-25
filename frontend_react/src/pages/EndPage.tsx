@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getResults } from "../api/sessionApi";
 
 type Results = {
-  initial_states: Record<string, number>;
-  final_states:   Record<string, number>;
+  initial_states:           Record<string, number>;
+  final_states:             Record<string, number>;
+  normalized_learning_gain: Record<string, number>;
 };
 
 const KC_LIST = [
@@ -39,14 +40,24 @@ function DeltaBadge({ delta }: { delta: number }) {
   );
 }
 
+function NLGBadge({ nlg }: { nlg: number }) {
+  const color = nlg > 0.4 ? "#2e7d32" : nlg > 0 ? "#f57f17" : "#888";
+  return (
+    <span style={{ color, fontWeight: "bold", fontSize: 13 }}>
+      {nlg > 0 ? "+" : ""}{(nlg * 100).toFixed(0)}%
+    </span>
+  );
+}
+
 export default function EndPage() {
   const loc = useLocation();
   const nav = useNavigate();
   const st  = loc.state as { sessionId?: string } | null;
   const sessionId = st?.sessionId ?? "";
 
-  const [results, setResults] = useState<Results | null>(null);
-  const [error, setError]     = useState(false);
+  const [results, setResults]     = useState<Results | null>(null);
+  const [error, setError]         = useState(false);
+  const [showNLGInfo, setShowNLGInfo] = useState(false);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -108,13 +119,43 @@ export default function EndPage() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
               <thead>
                 <tr style={{ backgroundColor: "#1565C0" }}>
-                  {["Concepte", "Inici (diagnosi)", "Final (prova)", "Canvi"].map(h => (
+                  {(["Concepte", "Inici (diagnosi)", "Final (prova)", "Canvi"] as const).map(h => (
                     <th key={h} style={{
                       padding: "10px 12px", color: "white",
                       fontWeight: "bold", textAlign: "center",
                       borderRight: "1px solid rgba(255,255,255,0.15)",
                     }}>{h}</th>
                   ))}
+                  <th style={{
+                    padding: "10px 12px", color: "white",
+                    fontWeight: "bold", textAlign: "center",
+                    borderRight: "1px solid rgba(255,255,255,0.15)",
+                  }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                      Guany normalitzat
+                      <button
+                        onClick={() => setShowNLGInfo(v => !v)}
+                        title="Més informació sobre el guany normalitzat"
+                        style={{
+                          background: showNLGInfo ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.25)",
+                          border: "1px solid rgba(255,255,255,0.6)",
+                          borderRadius: "50%",
+                          color: "white",
+                          width: 18, height: 18,
+                          fontSize: 11,
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                          lineHeight: 1,
+                          padding: 0,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                          transition: "background 0.15s",
+                        }}
+                      >?</button>
+                    </span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -122,6 +163,7 @@ export default function EndPage() {
                   const ini   = results.initial_states[key] ?? 0;
                   const fin   = results.final_states[key]   ?? 0;
                   const delta = fin - ini;
+                  const nlg   = results.normalized_learning_gain[key] ?? 0;
                   return (
                     <tr key={key} style={{ backgroundColor: i % 2 === 0 ? "#fff" : "#f9f9f9" }}>
                       <td style={{ padding: "10px 12px", borderBottom: "1px solid #eee" }}>
@@ -147,6 +189,12 @@ export default function EndPage() {
                       }}>
                         <DeltaBadge delta={delta} />
                       </td>
+                      <td style={{
+                        padding: "10px 12px", textAlign: "center",
+                        borderBottom: "1px solid #eee",
+                      }}>
+                        <NLGBadge nlg={nlg} />
+                      </td>
                     </tr>
                   );
                 })}
@@ -166,6 +214,44 @@ export default function EndPage() {
                 }}>{label}</span>
               ))}
             </div>
+
+            {/* NLG info box — visible when ? is clicked */}
+            {showNLGInfo && (
+              <div style={{
+                marginTop: 14,
+                padding: "14px 40px 14px 16px",
+                backgroundColor: "#e3f2fd",
+                borderRadius: 8,
+                border: "1px solid #90caf9",
+                fontSize: 13,
+                color: "#0d47a1",
+                lineHeight: 1.75,
+                position: "relative",
+              }}>
+                <button
+                  onClick={() => setShowNLGInfo(false)}
+                  style={{
+                    position: "absolute", top: 8, right: 10,
+                    background: "none", border: "none",
+                    fontSize: 18, cursor: "pointer", color: "#5c6bc0",
+                    lineHeight: 1,
+                  }}
+                >×</button>
+                <strong>Guany normalitzat (Normalized Learning Gain)</strong><br />
+                <br />
+                Mesura quant has millorat tenint en compte el teu punt de partida. La fórmula és:<br />
+                <code style={{ backgroundColor: "#bbdefb", padding: "2px 6px", borderRadius: 4 }}>
+                  (final − inici) / (1 − inici)
+                </code>
+                <br /><br />
+                <strong>Exemple:</strong> si comences amb 65% i acabes amb 87%:<br />
+                (0,87 − 0,65) / (1 − 0,65) = <strong>+63%</strong><br />
+                <br />
+                Permet comparar el progrés de manera <strong>justa</strong> entre alumnes que comencen
+                en nivells molt diferents: un alumne que ja tenia el 90% té molt menys marge de millora
+                que un que comença des del 40%.
+              </div>
+            )}
           </>
         )}
 

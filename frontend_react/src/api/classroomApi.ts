@@ -31,7 +31,13 @@ export async function endClass(class_code: string) {
 /** Student: poll to find out whether the teacher has ended the session. */
 export async function getClassStatus(class_code: string) {
   const res = await api.get(`/api/classroom/${class_code}/status`);
-  return res.data as { ended: boolean };
+  return res.data as { ended: boolean; messages_enabled: boolean };
+}
+
+/** Teacher: toggle motivational messages for the class (A/B test). */
+export async function toggleMessages(class_code: string) {
+  const res = await api.post(`/api/classroom/${class_code}/toggle-messages`);
+  return res.data as { messages_enabled: boolean };
 }
 
 /** Teacher: download the class Excel report as a file. */

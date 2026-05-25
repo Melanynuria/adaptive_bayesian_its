@@ -138,10 +138,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>1</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>5d496ee3-0ae1-8193-0446-f00398859507</transaction_id><Selection><value>l-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[5(2-x)]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>5d496ee3-0ae1-8193-0446-f00398859507</transaction_id><Selection><value>l-1</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[4(3-2x)]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Please enter "5(2-x)" in the highlighted field.]]></hintMessage>
+            <hintMessage><![CDATA[Please enter "4(3-2x)" in the highlighted field.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -162,7 +162,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[5(2-x)]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[4(3-2x)]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Tutor (unevaluated)</Actor>
@@ -228,10 +228,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>3</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>8684346c-c98c-4206-0c76-a59ef433455d</transaction_id><Selection><value>l-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[10-5x]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>8684346c-c98c-4206-0c76-a59ef433455d</transaction_id><Selection><value>l-2</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[12-8x]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[El 5 de fora multiplica tots els termes de dins. Fes la multiplicació directament!]]></hintMessage>
+            <hintMessage><![CDATA[El 4 de fora multiplica tots els termes de dins. Fes la multiplicació directament!]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -252,7 +252,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[10-5x]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[12-8x]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -318,7 +318,7 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>5</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>f42985fd-302f-0aa4-45a6-be0e7bf94c6d</transaction_id><Selection><value>l-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-5x]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>f42985fd-302f-0aa4-45a6-be0e7bf94c6d</transaction_id><Selection><value>l-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-8x]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
             <hintMessage><![CDATA[Ara deixa sol el terme amb x.]]></hintMessage>
@@ -342,7 +342,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[-5x]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[-8x]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -363,10 +363,10 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>6</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>4feb8c52-af32-e865-da5e-95db2c33b868</transaction_id><Selection><value>r-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[20-10]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>4feb8c52-af32-e865-da5e-95db2c33b868</transaction_id><Selection><value>r-3</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[20-12]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[El 10 està sumant al costat esquerre.]]></hintMessage>
+            <hintMessage><![CDATA[El 12 està sumant al costat esquerre.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
             <oldActionType>Correct Action</oldActionType>
@@ -387,7 +387,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[20-10]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[20-12]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -408,7 +408,7 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>7</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>0d4ef5bf-118a-63a1-8fb4-81b707efc862</transaction_id><Selection><value>l-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-5x]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>0d4ef5bf-118a-63a1-8fb4-81b707efc862</transaction_id><Selection><value>l-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-8x]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
             <hintMessage><![CDATA[Res a fer aquí]]></hintMessage>
@@ -432,7 +432,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[-5x]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[-8x]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -453,7 +453,7 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>8</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>5c6eb8be-a4dd-375c-7a71-186c56614dfb</transaction_id><Selection><value>r-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[10]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>5c6eb8be-a4dd-375c-7a71-186c56614dfb</transaction_id><Selection><value>r-4</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[8]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
             <hintMessage><![CDATA[Simplifica. ]]></hintMessage>
@@ -477,7 +477,7 @@
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[10]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[8]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -498,7 +498,7 @@
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>9</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>92897e7c-bc5e-afe2-4c9c-c8503968ee1c</transaction_id><Selection><value>l-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[5x]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>92897e7c-bc5e-afe2-4c9c-c8503968ee1c</transaction_id><Selection><value>l-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[8x]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
             <hintMessage><![CDATA[La variable ha quedat amb coeficient negatiu.
@@ -523,7 +523,7 @@ Per deixar-lo positiu, canvia el signe dels dos costats.]]></hintMessage>
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[5x]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[8x]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -544,7 +544,7 @@ Per deixar-lo positiu, canvia el signe dels dos costats.]]></hintMessage>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>10</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>964113ba-9d05-bc07-2721-da8b5bc2a5d3</transaction_id><Selection><value>r-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-10]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>964113ba-9d05-bc07-2721-da8b5bc2a5d3</transaction_id><Selection><value>r-5</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-8]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
             <hintMessage><![CDATA[La variable ha quedat amb coeficient negatiu.
@@ -569,7 +569,7 @@ Per deixar-lo positiu, canvia el signe dels dos costats.]]></hintMessage>
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[-10]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[-8]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -593,7 +593,7 @@ Per deixar-lo positiu, canvia el signe dels dos costats.]]></hintMessage>
             <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>b4644ab2-bb34-bf36-7643-41e522565f35</transaction_id><Selection><value>l-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[x]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Ara la x està multiplicada per 5.
+            <hintMessage><![CDATA[Ara la x està multiplicada per 8.
 Pensa quina operació desfà aquest coeficient.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
@@ -636,10 +636,10 @@ Pensa quina operació desfà aquest coeficient.]]></hintMessage>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>12</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>531e31c1-7d89-cc1c-ffa5-4f3af86e4aba</transaction_id><Selection><value>r-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-10/5]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>531e31c1-7d89-cc1c-ffa5-4f3af86e4aba</transaction_id><Selection><value>r-6</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-8/8]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
-            <hintMessage><![CDATA[Ara la x està multiplicada per 5.
+            <hintMessage><![CDATA[Ara la x està multiplicada per 8.
 Pensa quina operació desfà aquest coeficient.]]></hintMessage>
             <callbackFn></callbackFn>
             <actionType>Correct Action</actionType>
@@ -661,7 +661,7 @@ Pensa quina operació desfà aquest coeficient.]]></hintMessage>
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[-10/5]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[-8/8]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -727,7 +727,7 @@ Pensa quina operació desfà aquest coeficient.]]></hintMessage>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>14</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>f12ac054-8aa0-d5ca-d987-f1fc750862d7</transaction_id><Selection><value>r-7</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-2]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>f12ac054-8aa0-d5ca-d987-f1fc750862d7</transaction_id><Selection><value>r-7</value></Selection><Action><value>UpdateTextField</value></Action><Input><value><![CDATA[-1]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
             <hintMessage><![CDATA[Calcula la divisió final.]]></hintMessage>
@@ -751,7 +751,7 @@ Pensa quina operació desfà aquest coeficient.]]></hintMessage>
                 <Input>
                     <matcher>
                         <matcherType>ExactMatcher</matcherType>
-                        <matcherParameter name="single"><![CDATA[-2]]></matcherParameter>
+                        <matcherParameter name="single"><![CDATA[-1]]></matcherParameter>
                     </matcher>
                 </Input>
                 <Actor linkTriggered="false">Student</Actor>
@@ -772,7 +772,7 @@ Pensa quina operació desfà aquest coeficient.]]></hintMessage>
             <stepSuccessfulCompletion></stepSuccessfulCompletion>
             <stepStudentError></stepStudentError>
             <uniqueID>15</uniqueID>
-            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>aea86cf7-a698-c368-5f58-fd7cfefcb1d3</transaction_id><Selection><value>done</value></Selection><Action><value>ButtonPressed</value></Action><Input><value><![CDATA[-1]]></value></Input></properties></message>
+            <message><verb>NotePropertySet</verb><properties><MessageType>InterfaceAction</MessageType><transaction_id>fb46e9eb-65cc-1090-6b05-02ae614f28d1</transaction_id><Selection><value>done</value></Selection><Action><value>ButtonPressed</value></Action><Input><value><![CDATA[-1]]></value></Input></properties></message>
             <buggyMessage></buggyMessage>
             <successMessage></successMessage>
             <hintMessage><![CDATA[Please click the highlighted button.]]></hintMessage>
