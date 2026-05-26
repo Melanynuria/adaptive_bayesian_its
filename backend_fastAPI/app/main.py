@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 import json
 import sqlite3
 import asyncio
+import threading
 
 app = FastAPI()
 
@@ -1011,11 +1012,40 @@ def health():
 @app.post("/api/classroom/{class_code}/start")
 def start_class(class_code: str):
     """
-    Teacher endpoint: initialise a new class session.
+    Teacher endpoint: initialise or resume a class session.
 
-    Creates a fresh per-class SQLite database and registers it in ACTIVE_CLASSES
-    so subsequent student session-start calls can find it.
+    If a folder for this class_code already exists from TODAY, that session is
+    resumed (its DB is reloaded into ACTIVE_CLASSES) so students can reconnect
+    and continue from where they left off.  If no today-folder exists a fresh DB
+    is created as before.
+
+    "Today" is matched by the DD-MM-YYYY suffix in the folder name so a teacher
+    who uses the same class_code on a different day always gets a clean session.
     """
+    today_str = datetime.now().strftime("%d-%m-%Y")
+    # Look for any folder created today for this class_code
+    existing_today = sorted(
+        [
+            f for f in CLASSES_DIR.iterdir()
+            if f.is_dir()
+            and f.name.startswith(f"{class_code}_")
+            and today_str in f.name
+        ],
+        key=lambda p: p.name,
+    )
+
+    if existing_today:
+        latest_folder = existing_today[-1]
+        # The DB file has the same stem as the folder
+        db_candidates = list(latest_folder.glob("*.db"))
+        if db_candidates:
+            db_path = db_candidates[0]
+            ACTIVE_CLASSES[class_code] = db_path
+            CLASS_MESSAGES_ENABLED.setdefault(class_code, True)
+            print(f"[CLASS RESUMED] {class_code}  →  {db_path.name}")
+            return {"status": "resumed", "class_code": class_code, "db": db_path.name}
+
+    # No existing session today → create fresh
     db_path = create_class_db(class_code)
     ACTIVE_CLASSES[class_code] = db_path
     CLASS_MESSAGES_ENABLED[class_code] = True
@@ -1026,11 +1056,28 @@ def start_class(class_code: str):
 @app.post("/api/session/start")
 def start_session(req: StartSessionRequest):
     """
-    Student endpoint: create a new session and return the three diagnostic problem IDs.
+    Student endpoint: create or resume a session and return the exercise queue.
 
-    Requires the teacher to have already started the class (class_code in ACTIVE_CLASSES).
-    Returns 403 otherwise so students see a helpful message instead of a crash.
-    Also writes a row to the registry DB so the session can be found after a restart.
+    Requires the teacher to have already started (or resumed) the class.
+    Returns 403 otherwise.
+
+    RESUME path (network-error recovery):
+      If a session for this student_id already exists in the active class DB the
+      existing session is restored into in-memory state and returned together with:
+        - completed_problems  list of already-finished exercises
+        - assignment          current personalised set (if BKT already ran), or null
+        - resumed             true
+
+      The frontend uses these fields to skip exercises the student already did and
+      route them directly to the correct page (tutor / waiting).
+
+      Edge case: if the diagnostics are done but the assignment is missing (server
+      crashed while BKT was running in the background) the BKT computation is
+      automatically re-triggered so the WaitingPage will receive the result.
+
+    NEW SESSION path (normal flow):
+      Creates a fresh session row, registers it in the registry DB, and returns
+      the three diagnostic problem IDs.
     """
     if req.class_code not in ACTIVE_CLASSES:
         raise HTTPException(
@@ -1038,12 +1085,83 @@ def start_session(req: StartSessionRequest):
             detail="Aquesta classe no ha iniciat sessió. Espera que el professor l'iniciï.",
         )
 
-    db_path    = ACTIVE_CLASSES[req.class_code]
+    db_path      = ACTIVE_CLASSES[req.class_code]
     class_folder = db_path.parent
-    session_id = str(uuid.uuid4())
+    safe_sid     = re.sub(r"[^\w\-]", "_", req.student_id)
 
-    # Per-student DB lives in students/ beside the main class DB
-    safe_sid = re.sub(r"[^\w\-]", "_", req.student_id)
+    # ── Check for an existing session for this student in this class ──────────
+    conn = sqlite3.connect(db_path, timeout=10)
+    existing = conn.execute(
+        "SELECT session_id, completed_problems FROM sessions WHERE class_code = ? AND student_id = ?",
+        (req.class_code, req.student_id),
+    ).fetchone()
+
+    if existing:
+        session_id, completed_json = existing
+        completed = json.loads(completed_json or "[]")
+
+        # Fetch current assignment (may be None if BKT hasn't run yet or round just ended)
+        assignment_row = conn.execute(
+            "SELECT level, difficulty, problem_ids, mastery FROM assignments WHERE session_id = ?",
+            (session_id,),
+        ).fetchone()
+        conn.close()
+
+        assignment = None
+        if assignment_row:
+            assignment = {
+                "level":       assignment_row[0],
+                "difficulty":  assignment_row[1],
+                "problem_ids": json.loads(assignment_row[2]),
+                "mastery":     bool(assignment_row[3]),
+            }
+
+        # Restore session into in-memory SESSIONS cache
+        student_db_path = class_folder / "students" / f"{safe_sid}.db"
+        SESSIONS[session_id] = {
+            "class_code":      req.class_code,
+            "student_id":      req.student_id,
+            "db_path":         str(db_path),
+            "student_db_path": str(student_db_path),
+            "hints_seen":      {},  # ephemeral — cannot be recovered; safe to reset
+        }
+
+        completed_ids    = [c["problem_id"] for c in completed]
+        n_done           = len(completed)
+        diagnostics_done = n_done >= N_FIRST_EXERCISES
+
+        # Re-trigger BKT if diagnostics finished but assignment is missing
+        # (server crashed while BKT was running in the background thread)
+        if diagnostics_done and assignment is None:
+            personalized_done = [pid for pid in completed_ids if pid not in DIAGNOSTIC_EXERCISES]
+            rounds_done   = len(personalized_done) // N_ASSIGNED if personalized_done else 0
+            report_phase  = 1 + rounds_done
+            print(
+                f"[RESUME] Re-triggering BKT  session={session_id[:8]}"
+                f"  phase={report_phase}  used={personalized_done}"
+            )
+            threading.Thread(
+                target=process_completed_session,
+                args=(session_id, req.class_code, db_path, personalized_done, report_phase),
+                daemon=True,
+            ).start()
+
+        print(
+            f"[SESSION RESUMED] class={req.class_code}  student={req.student_id}"
+            f"  session={session_id[:8]}  done={n_done}"
+        )
+        return {
+            "session_id":        session_id,
+            "problem_ids":       list(DIAGNOSTIC_EXERCISES),  # kept for API compat
+            "completed_problems": completed,
+            "assignment":        assignment,
+            "resumed":           True,
+        }
+
+    conn.close()
+
+    # ── New session ───────────────────────────────────────────────────────────
+    session_id      = str(uuid.uuid4())
     student_db_path = class_folder / "students" / f"{safe_sid}.db"
     _init_steps_db(student_db_path)
 
@@ -1052,7 +1170,7 @@ def start_session(req: StartSessionRequest):
         "student_id":      req.student_id,
         "db_path":         str(db_path),
         "student_db_path": str(student_db_path),
-        "hints_seen":      {},   # problem_id → set of selections that had a hint
+        "hints_seen":      {},
     }
 
     conn = sqlite3.connect(db_path, timeout=10)
@@ -1063,7 +1181,6 @@ def start_session(req: StartSessionRequest):
     conn.commit()
     conn.close()
 
-    # Store path relative to DATA_DIR so the registry works regardless of working directory
     rel_path = str(db_path.relative_to(DATA_DIR))
     conn = sqlite3.connect(REGISTRY_DB)
     conn.execute(
@@ -1073,10 +1190,13 @@ def start_session(req: StartSessionRequest):
     conn.commit()
     conn.close()
 
-    print(f"[SESSION] class={req.class_code}  student={req.student_id}  folder={class_folder.name}")
+    print(f"[SESSION NEW] class={req.class_code}  student={req.student_id}  folder={class_folder.name}")
     return {
-        "session_id": session_id,
-        "problem_ids": ["level1Difficult_v1", "level2Difficult_v1", "level3Difficult_v1"],
+        "session_id":        session_id,
+        "problem_ids":       ["level1Difficult_v1", "level2Difficult_v1", "level3Difficult_v1"],
+        "completed_problems": [],
+        "assignment":        None,
+        "resumed":           False,
     }
 
 

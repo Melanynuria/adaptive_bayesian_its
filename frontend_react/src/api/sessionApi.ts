@@ -1,9 +1,33 @@
 import { api } from "./client";
 
-/** Create a new student session and receive the three diagnostic problem IDs. */
-export async function startSession(class_code: string, student_id: string) {
+export type CompletedProblem = { problem_id: string; completed_at: string };
+
+export type SessionAssignment = {
+  level: string;
+  difficulty: string;
+  problem_ids: string[];
+  mastery: boolean;
+} | null;
+
+export type StartSessionResponse = {
+  session_id: string;
+  /** Always the three diagnostic IDs — kept for API compatibility. */
+  problem_ids: string[];
+  /** Exercises the student already finished (empty for a new session). */
+  completed_problems: CompletedProblem[];
+  /** Current personalised assignment from the DB, or null if BKT hasn't run yet. */
+  assignment: SessionAssignment;
+  /** True when an existing session was found and restored (network-error recovery). */
+  resumed: boolean;
+};
+
+/** Create or resume a student session. */
+export async function startSession(
+  class_code: string,
+  student_id: string,
+): Promise<StartSessionResponse> {
   const res = await api.post("/api/session/start", { class_code, student_id });
-  return res.data as { session_id: string; problem_ids: string[] };
+  return res.data as StartSessionResponse;
 }
 
 /**
