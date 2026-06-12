@@ -322,16 +322,14 @@ def select_exercises(
 
 def bkt_update(p_l: float, correct: bool, params: Dict[str, float]) -> float:
     """
-    Perform one Bayesian Knowledge Tracing update step, including a forget term.
+    One BKT update step with a forget term.
 
-    p_l:    current probability the student has learned the KC
+    p_l:    current P(L) for this KC
     correct: True if the attempt was correct without a hint
-    params: dict with p_s (slip), p_g (guess), p_f (forget), p_l (learn)
+    params:  dict with keys p_s (slip), p_g (guess), p_f (forget), p_l (learn rate)
 
-    Returns the updated P(L) after observing this attempt.
-    The Bayes update uses the standard BKT formula:
-        P(L|obs) = P(obs|L)*P(L) / P(obs)
-    Then the learn/forget transition is applied to give P(L_{t+1}).
+    Standard Bayesian update — P(L|obs) = P(obs|L)*P(L) / P(obs) —
+    followed by the learn/forget transition to give P(L_{t+1}).
     """
     p_s   = params["p_s"]
     p_g   = params["p_g"]
@@ -339,16 +337,15 @@ def bkt_update(p_l: float, correct: bool, params: Dict[str, float]) -> float:
     p_lrn = params["p_l"]
 
     if correct:
-        num = p_l * (1.0 - p_s) # probability of knew it and didn't slip 
-        den = num + (1.0 - p_l) * p_g # probability of didn't know it but guessed it right. 
+        num = p_l * (1.0 - p_s)               # knew it, didn't slip
+        den = num + (1.0 - p_l) * p_g         # or didn't know but guessed right
     else:
-        num = p_l * p_s         # probabilitiy of know it but slipped 
-        den = num + (1.0 - p_l) * (1.0 - p_g) # probability of didn't know it and didn't guess right 
+        num = p_l * p_s                       # knew it but slipped
+        den = num + (1.0 - p_l) * (1.0 - p_g)  # or didn't know and got it wrong
 
     p_post = num / den if den > 0 else p_l
-    # Apply learn/forget transition: even a student who knows may forget,
-    # and one who does not may spontaneously learn.
-    return p_post * (1.0 - p_f) + (1.0 - p_post) * p_lrn # knew it and keep it + didn't know it but learned it
+    # Even a student who knows may forget; one who doesn't may spontaneously learn.
+    return p_post * (1.0 - p_f) + (1.0 - p_post) * p_lrn
 
 
 def compute_knowledge_states(session_id: str, db_path: Path) -> Dict[str, float]:

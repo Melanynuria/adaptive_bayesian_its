@@ -48,8 +48,34 @@ backend_fastAPI/app/data/raw/
 backend_fastAPI/app/data/processed/
 backend_fastAPI/app/data/outputs/
 
-# Optional generated outputs
-backend_fastAPI/app/data/outputs/
+# Student / classroom data — cannot be published
+# Real classroom sessions (pilot with actual students)
+backend_fastAPI/app/data/classes/CLASS_A_*/
+backend_fastAPI/app/data/classes/CLASS_B_*/
+backend_fastAPI/app/data/classes/1ESO_A_*/
+# Trial sessions — all except the one kept as example (c1_17h59_20-05-2026)
+backend_fastAPI/app/data/classes/a1_*/
+backend_fastAPI/app/data/classes/c01_*/
+backend_fastAPI/app/data/classes/c2_*/
+backend_fastAPI/app/data/classes/c3_*/
+backend_fastAPI/app/data/classes/c3_*.db
+backend_fastAPI/app/data/classes/c7_*/
+backend_fastAPI/app/data/classes/c8_*/
+backend_fastAPI/app/data/classes/c9_*/
+backend_fastAPI/app/data/classes/c10_*/
+backend_fastAPI/app/data/classes/c11_*/
+backend_fastAPI/app/data/classes/c12_*/
+backend_fastAPI/app/data/classes/c13_*/
+backend_fastAPI/app/data/classes/c14_*/
+backend_fastAPI/app/data/classes/c15_*/
+backend_fastAPI/app/data/classes/c16_*/
+backend_fastAPI/app/data/classes/c17_*/
+backend_fastAPI/app/data/classes/c20_*/
+backend_fastAPI/app/data/classes/c30_*/
+backend_fastAPI/app/data/classes/first_analysis.db
+
+# LaTeX thesis document
+Solve2Learn_TFG_v2/
 
 # Model artifacts
 backend_fastAPI/models/

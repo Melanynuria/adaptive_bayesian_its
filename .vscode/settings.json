@@ -3,14 +3,20 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "database": "backend_fastAPI/app/data/classes/c1_17h59_20-05-2026/c1_17h59_20-05-2026.db",
-            "name": "c1"
+            "database": "backend_fastAPI/app/data/classes/Class_0_11h14_11-06-2026/Class_0_11h14_11-06-2026.db",
+            "name": "c0"
         },
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "name": "c11",
-            "database": "backend_fastAPI/app/data/classes/c11_10h24_25-05-2026/c11_10h24_25-05-2026.db"
+            "name": "a1",
+            "database": "backend_fastAPI/app/data/classes/Class_0_11h14_11-06-2026/students/DVHN-9CDA.db"
+        },
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "app",
+            "database": "backend_fastAPI/app/data/app.db"
         }
     ],
     "sqltools.useNodeRuntime": true

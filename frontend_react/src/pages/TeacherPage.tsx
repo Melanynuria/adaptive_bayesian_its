@@ -38,6 +38,7 @@ export default function TeacherPage() {
   const [sessionEnded,   setSessionEnded]   = useState(false);
   const [downloading,    setDownloading]    = useState(false);
   const [messagesEnabled, setMessagesEnabled] = useState(true);
+  const [showExample,    setShowExample]    = useState(false);
 
   useEffect(() => {
     if (!activeClass) return;
@@ -390,6 +391,68 @@ export default function TeacherPage() {
               )}
             </>
           )}
+          {/* ─── Example exercise ─── */}
+          <div style={{ marginTop: activeClass ? 28 : 0, maxWidth: activeClass ? undefined : 480, margin: activeClass ? "28px 0 0" : "28px auto 0" }}>
+            <button
+              onClick={() => setShowExample(v => !v)}
+              style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "12px 20px",
+                background: showExample
+                  ? "linear-gradient(90deg, #0d5b6e, #15a4c0)"
+                  : "white",
+                color: showExample ? "white" : "#0d5b6e",
+                border: `2px solid ${showExample ? "transparent" : "#15a4c0"}`,
+                borderRadius: 12, cursor: "pointer",
+                fontSize: 14, fontWeight: 800, fontFamily: "inherit",
+                boxShadow: showExample ? "0 4px 14px rgba(21,164,192,0.35)" : "none",
+                transition: "all 0.2s",
+              }}
+            >
+              <span style={{ fontSize: 18 }}>🔍</span>
+              {showExample ? "Amaga l'exemple" : "Veure exemple d'exercici (Nivell 3 — Difícil)"}
+              <span style={{ marginLeft: "auto", fontSize: 13, opacity: 0.8 }}>
+                {showExample ? "▲" : "▼"}
+              </span>
+            </button>
+
+            {showExample && (
+              <div style={{
+                marginTop: 12,
+                backgroundColor: "white", borderRadius: 16,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
+                overflow: "hidden",
+                border: "1.5px solid #b2dfdb",
+              }}>
+                <div style={{
+                  background: "linear-gradient(90deg, #0d5b6e, #15a4c0)",
+                  padding: "10px 20px",
+                  display: "flex", alignItems: "center", gap: 10,
+                }}>
+                  <span style={{ color: "white", fontWeight: 800, fontSize: 14 }}>
+                    Exemple: Nivell 3 — Difícil
+                  </span>
+                  <span style={{
+                    padding: "2px 10px", borderRadius: 20,
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    color: "white", fontSize: 12, fontWeight: 700,
+                  }}>
+                    Mode demostració
+                  </span>
+                </div>
+                <iframe
+                  title="Exemple exercici level3Difficult"
+                  src="/CTAT/level3Difficult/HTML/HTML_level3Difficult_v1.html"
+                  style={{
+                    width: "100%", height: 560,
+                    border: "none", display: "block",
+                    backgroundColor: "white",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     </>
