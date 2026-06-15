@@ -4,6 +4,10 @@
 
 The idea is simple: not every student struggles with the same thing. Some kids freeze when they see parentheses. Others are fine with that but completely fall apart when there's a coefficient to remove. Solve2Learn tries to figure out where each student is and give them exercises that actually match their level — not too easy to be boring, not so hard they just give up.
 
+<p align="center">
+  <img src="diagrams/TFG-ITS%20architecture.png" alt="Solve2Learn system architecture" width="680"/>
+</p>
+
 ---
 
 ## What it actually does
@@ -16,9 +20,42 @@ A teacher opens a class session from the dashboard. Students join with a class c
 - Expanding and eliminating parentheses
 - Normalising a negative sign
 
+<table>
+<tr>
+<td align="center" width="50%">
+  <img src="CTAT_exercises/StartSessionPage_Teacher_ClassActivation.jpg" alt="Teacher opens a class session" width="100%"/>
+  <sub>Teacher opens a session with a class code</sub>
+</td>
+<td align="center" width="50%">
+  <img src="CTAT_exercises/StartSessionPage.jpg" alt="Student joins with class code" width="100%"/>
+  <sub>Student joins by entering the class code</sub>
+</td>
+</tr>
+</table>
+
+Each student is assigned a random anonymous token on arrival — no names, no logins. They note it down; if they lose connection, they use it to rejoin and pick up exactly where they left off.
+
+<p align="center">
+  <img src="CTAT_exercises/AnonymousCode.jpg" alt="Anonymous session token shown to the student" width="460"/>
+</p>
+
+Students immediately work through three diagnostic exercises. Every step they submit is fed into the BKT engine in real time:
+
+<p align="center">
+  <img src="CTAT_exercises/TutorPage_DiagnosticPhase1.jpg" alt="Student solving a diagnostic exercise" width="720"/>
+</p>
+
 Once the diagnostics are done, each student gets a personalised batch of exercises at their own level and difficulty. The teacher's dashboard updates every five seconds showing everyone's progress, knowledge states per skill, and who has raised their hand asking for help.
 
+<p align="center">
+  <img src="CTAT_exercises/TeacherPage_3Students.jpg" alt="Teacher real-time monitoring dashboard" width="720"/>
+</p>
+
 When the teacher ends the session, every student sees their results: initial vs. final knowledge state per skill, how much they improved, and a normalised learning gain that makes progress comparable across students who started at very different places.
+
+<p align="center">
+  <img src="CTAT_exercises/FinalPage.jpg" alt="Student end-of-session results" width="620"/>
+</p>
 
 ---
 
@@ -86,6 +123,12 @@ No personal data is ever collected. When a student starts a session, their brows
 ## The BKT parameters
 
 The five knowledge components were modelled using a standard four-parameter BKT model (initial knowledge, learning rate, slip, guess). Parameters were estimated from a dataset of real student interactions collected during prior algebra sessions. Each KC has its own parameters because, empirically, they behave very differently — for instance, `expand_eliminate_parentheses` starts at near-zero prior knowledge but has a fast learning rate, while `normalize_negative_sign` starts high but slips a lot.
+
+The chart below shows mean initial vs. final BKT mastery estimates across two pilot classes (n = 36 students):
+
+<p align="center">
+  <img src="pilot_figures/figJ10_bkt_initial_final.png" alt="Mean initial vs final BKT mastery per knowledge component" width="760"/>
+</p>
 
 ---
 
